@@ -3,6 +3,9 @@
 <title>W3.CSS Template</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
 <link rel="stylesheet" href="{{ url_for('static', filename='adFiles/index.css') }}">
 <style>
     body, h1, h2, h3, h4, h5, h6 {
@@ -47,39 +50,7 @@
 
 <!-- First Grid -->
 <div class="rowPadding padding64 container">
-    <div class="content">
-        <!-- input+submit+text -->
-        <div>
-            <div class="left-top" style="float:left;width:50%;">
-                <h1>Lorem Ipsum</h1>
-                <p>
-                    snelle uitleg :D
-                </p>
-                <!-- Input area for serach terms -->
-                <div>
-                    <form role="form" method='POST' action='/handle_table'>
-                        {{datalist_input | safe}}
-                        <input type="submit" style="margin-top:6px;margin-bottom: 6px;">
-                    </form>
-                </div>
-            </div>
-
-            <!-- nice new graph -->
-            <div class="top-right" style="float:right;">
-                <img src="../Static/adFiles/Images/grafiek.jpg" height="200" width="200"/>
-            </div>
-        </div>
-        <!-- table -->
-        <table id="artTable" width="100%" style="text-align:left;">
-            <tr>
-                <th><p>Article name</p></th>
-                <th><p>Publicasion date</p></th>
-                <th><p>link</p></th>
-                <th><p>idk</p></th>
-            </tr>
-            {{tableData | safe}}
-        </table>
-    </div>
+  {{upperBody | safe}}
 </div>
 
 
@@ -87,25 +58,11 @@
 <div class="rowPadding whiteGrey padding64 container">
     <div class="content">
         <div class="twoThird">
-            <h1>Lorem Ipsum</h1>
-            <h5 class="padding32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat.</h5>
 
-            <p class="textGrey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-                ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat.</p>
         </div>
     </div>
 </div>
 
-<div class="container black center opacity padding64">
-    <h1 class="margin extraLarge"><a href="https://wormbase.org/#012-34-5">Quote of the day: live worm</a></h1>
-</div>
 
 <script>
     // Used to toggle the menu on small screens when clicking on the menu button

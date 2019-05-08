@@ -1,0 +1,54 @@
+
+<body>
+<div class="content">
+    <!-- input+submit+text -->
+    <div>
+        <div class="left-top" style="float:left;width:50%;">
+            <h1>Lorem Ipsum</h1>
+            <p>
+                snelle uitleg :D
+            </p>
+
+
+            <!-- Input area for serach terms -->
+            <div>
+                <form role="form" method='POST' action='/handle_table'>
+                    {% for datalist_number in range(1, amount_input + 1) %}
+                    <input list="browsers" name="datalist{{ datalist_number }}">
+                    <datalist id="browsers" name="datalist">
+                        {% for term in term_list %}
+                        <option value={{term}}>
+                            {% endfor %}
+                    </datalist>
+                    {% endfor %}
+                    <input type="submit" style="margin-top:6px;margin-bottom: 6px;">
+                </form>
+            </div>
+        </div>
+
+        <!-- nice new graph -->
+        <div class="top-right" style="float:right;">
+            <img src="../../../Static/adFiles/Images/grafiek.jpg" height="200" width="200"/>
+        </div>
+    </div>
+    <!-- table -->
+    <table id="artTable" width="100%" style="text-align:left;">
+        <tr>
+            <th><p>Article name</p></th>
+            <th><p>Publicasion date</p></th>
+            <th><p>link</p></th>
+        </tr>
+        {% for data_row in articles_list %}
+        <tr>
+            <td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/{{data_row['ID']}}">{{data_row["title"]}}</a></p></td>
+            <td><p>{{data_row["year"]}}</p></td>
+            <td><p>
+                {% for author in data_row["Author"] %}
+                    {{author["fore"]}}. {{author["last"]}},
+                {% endfor %}
+            </p></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
