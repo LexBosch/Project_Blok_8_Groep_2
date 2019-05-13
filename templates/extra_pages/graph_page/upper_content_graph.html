@@ -1,4 +1,3 @@
-
 <body>
 <div class="content">
     <!-- input+submit+text -->
@@ -12,23 +11,13 @@
 
             <!-- Input area for serach terms -->
             <div>
-                <form role="form" method='POST' action='/handle_table'>
-                    {% for datalist_number in range(1, amount_input + 1) %}
-                    <input list="browsers" name="datalist{{ datalist_number }}">
-                    <datalist id="browsers" name="datalist">
-                        {% for term in term_list %}
-                        <option value={{term}}>
-                            {% endfor %}
-                    </datalist>
-                    {% endfor %}
-                    <input type="submit" style="margin-top:6px;margin-bottom: 6px;">
-                </form>
+                {% include "extra_pages/graph_page/graph_main.html" %}
             </div>
         </div>
 
         <!-- nice new graph -->
         <div class="top-right" style="float:right;">
-            <img src="../../../Static/adFiles/Images/grafiek.jpg" height="200" width="200"/>
+            <img src="{{ url_for('static', filename='adFiles/Images/grafiek.jpg') }}" height="200" width="200"/>
         </div>
     </div>
     <!-- table -->
@@ -44,7 +33,7 @@
             <td><p>{{data_row["year"]}}</p></td>
             <td><p>
                 {% for author in data_row["Author"] %}
-                    {{author["fore"]}}. {{author["last"]}},
+                {{author["fore"]}}. {{author["last"]}},
                 {% endfor %}
             </p></td>
         </tr>

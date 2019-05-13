@@ -171,13 +171,11 @@ def create_table(publication_data):
 
     #
 
-
     new_data_term_list = {}
 
     for key in term_list:
         if term_list[key] >= 3:
             new_data_term_list[key] = term_list[key]
-
 
     #
 
@@ -187,3 +185,6 @@ def create_table(publication_data):
 
 if __name__ == '__main__':
     app.run()
+
+
+
