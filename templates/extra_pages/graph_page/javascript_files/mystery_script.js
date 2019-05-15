@@ -6207,7 +6207,7 @@
             "target-endpoint": "outside-to-line"
         }).selector(":selected").css({
             "background-color": "#0169D9",
-            "line-color": "#0169D9",
+            "line-color": "#d9512d",
             "source-arrow-color": "#0169D9",
             "target-arrow-color": "#0169D9",
             "mid-source-arrow-color": "#0169D9",

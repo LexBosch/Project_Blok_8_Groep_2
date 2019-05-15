@@ -183,6 +183,19 @@ def create_table(publication_data):
     return all_article_dicts
 
 
+@app.route('/graph', methods=['GET', 'POST'])
+def graph():
+    amount_list = 3
+    return render_template("BASE.html", term_list=get_datalist_element_words(),
+                           amount_input=amount_list,
+                           articles_list = [],
+                           pagetype = "graph")
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run()
 

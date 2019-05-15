@@ -1787,7 +1787,7 @@
   "data": {
     "source": "610236",
     "target": "605755",
-    "weight": 0.0046327286,
+    "weight": 0.9946327286,
     "group": "coexp",
     "networkId": 1103,
     "networkGroupId": 18,
@@ -1850,7 +1850,7 @@
   "data": {
     "source": "610236",
     "target": "599889",
-    "weight": 0.0053057605,
+    "weight": 0.9053057605,
     "group": "coexp",
     "networkId": 1103,
     "networkGroupId": 18,

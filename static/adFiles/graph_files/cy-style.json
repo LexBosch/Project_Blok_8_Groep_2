@@ -89,56 +89,67 @@
 }, {
   "selector": "edge[group=\"coexp\"]",
   "style": {
-    "line-color": "#d0b7d5"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"coloc\"]",
   "style": {
-    "line-color": "#a0b3dc"
+    "line-color": "#d0b7d5"
   }
 }, {
   "selector": "edge[group=\"gi\"]",
   "style": {
-    "line-color": "#90e190"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"path\"]",
   "style": {
-    "line-color": "#9bd8de"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"pi\"]",
   "style": {
-    "line-color": "#eaa2a2"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"predict\"]",
   "style": {
-    "line-color": "#f6c384"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"spd\"]",
   "style": {
-    "line-color": "#dad4a2"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"spd_attr\"]",
   "style": {
-    "line-color": "#D0D0D0"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"reg\"]",
   "style": {
-    "line-color": "#D0D0D0"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"reg_attr\"]",
   "style": {
-    "line-color": "#D0D0D0"
+    "line-color": "#4d4dff"
   }
 }, {
   "selector": "edge[group=\"user\"]",
   "style": {
-    "line-color": "#f0ec86"
+    "line-color": "#4d4dff"
+  }
+}, {
+  "selector": "edge[?attr]",
+  "style": {
+    "shape": "rectangle",
+    "background-color": "#aaa",
+    "text-outline-color": "#aaa",
+    "width": "16px",
+    "height": "16px",
+    "font-size": "6px",
+    "z-index": "1"
   }
 }]
