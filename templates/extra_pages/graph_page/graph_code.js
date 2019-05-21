@@ -66,15 +66,15 @@ Promise.all([
             {
                 label: 'Edge length',
                 param: 'edgeLengthVal',
-                min: 1,
+                min: 0,
                 max: 200
             },
 
             {
                 label: 'Node spacing',
                 param: 'nodeSpacing',
-                min: 1,
-                max: 50
+                min: 0,
+                max: 100
             }
         ];
 
@@ -227,7 +227,8 @@ Promise.all([
                         '    overflow: hidden;' +
                         '    outline:none;',
                     'type': 'submit',
-                    'value': 'View articles'
+                    'value': 'View articles',
+                    'href' : 'https://downloadmoreram.com'
                 }, [t(link.name)]);
             });
 
@@ -248,8 +249,8 @@ Promise.all([
 
             var $links = [
                 {
-                    name: 'GeneCard',
-                    url: 'http://www.genecards.org/cgi-bin/carddisp.pl?gene=' + g
+                    name: 'neen',
+                    url: 'https://downloadmoreram.com'
                 },
                 {
                     name: 'UniProt search',
