@@ -1,23 +1,94 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .topnav {
+            overflow: hidden;
+            background-color: #f44336 !important;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+        }
 
+        .topnav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 12px 24px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .topnav a:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .active {
+            background-color: white;
+            color: black !important;
+        }
+
+        .active:hover{
+            background-color: #dadada !important;
+            color: black !important;
+        }
+
+        .topnav .icon {
+            display: none;
+        }
+
+        @media screen and (max-width: 600px) {
+            .topnav a:not(:first-child) {
+                display: none;
+            }
+
+            .topnav a.icon {
+                float: right;
+                display: block;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .topnav.responsive {
+                position: relative;
+            }
+
+            .topnav.responsive .icon {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            .topnav.responsive a {
+                float: none;
+                display: block;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
 <nav>
-<!-- Navbar -->
-<div class="topSection">
-    <div class="topBar redButton card leftAlign large">
-        <a class="barItem button hideMedium hideLarge right paddingLarge hoverWhite large redButton"
-           href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
-                class="fa fa-bars"></i></a>
-        <a href="/" class="barItem button paddingLarge white">Home</a>
-        <a href="graph" class="barItem button hideSmall paddingLarge hoverWhite">graph</a>
-        <a href="#" class="barItem button hideSmall paddingLarge hoverWhite">about the project</a>
-        <a href="#" class="barItem button hideSmall paddingLarge hoverWhite">contact</a>
+    <div class="topSection">
+    <div class="topnav" id="myTopnav">
+        <a href="/" class="active">Home</a>
+        <a href="/graph">graph</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
     </div>
-
-    <!-- Navbar on small screens -->
-    <div id="navDemo" class="barBlock white hide hideLarge hideMedium large">
-        <a href="#" class="barItem button paddingLarge">home</a>
-        <a href="#" class="barItem button paddingLarge">add</a>
-        <a href="#" class="barItem button paddingLarge">about the project</a>
-        <a href="#" class="barItem button paddingLarge">contact</a>
-    </div>
-</div>
 </nav>
+<script>
+    function myFunction() {
+        var x = document.getElementById("myTopnav");
+        if (x.className === "topnav") {
+            x.className += " responsive";
+        } else {
+            x.className = "topnav";
+        }
+    }
+</script>
+
+</body>
