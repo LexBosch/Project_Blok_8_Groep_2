@@ -191,7 +191,19 @@ def graph():
                            articles_list = [],
                            pagetype = "graph")
 
+@app.route('/input', methods=['GET', 'POST'])
+def input():
+    amount_list = 3
+    return render_template("BASE.html",
+                           amount_input=amount_list,
+                           pagetype = "input")
 
+
+
+@app.route('/about', methods=['GET', 'POST'])
+def about():
+    return render_template("BASE.html",
+                           pagetype = "about")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
