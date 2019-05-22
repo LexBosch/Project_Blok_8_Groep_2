@@ -3,7 +3,7 @@
     "id": "1",
     "idInt": 1,
     "name": "Bitter gourd",
-    "score": 0.0001,
+    "score": 0.01,
     "query": true,
     "gene": true
   },
@@ -24,7 +24,7 @@
     "id": "2",
     "idInt": 2,
     "name": "Insulin",
-    "score": 0.0001,
+    "score": 0.01,
     "query": true,
     "gene": true
   },
@@ -45,7 +45,7 @@
     "id": "3",
     "idInt": 3,
     "name": "Diabetis",
-    "score": 0.0001,
+    "score": 0.01,
     "query": true,
     "gene": true
   },
