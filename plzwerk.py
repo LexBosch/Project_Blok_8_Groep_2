@@ -6,6 +6,8 @@
 from flask import Flask, render_template, request
 from Bio import Entrez
 
+
+
 app = Flask(__name__)
 mail = "lexbosch@live.nl"
 
