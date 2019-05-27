@@ -3,8 +3,10 @@
 # WebApplication PubmedminingV0.5
 
 
-from flask import Flask, render_template, request
+import textmining
+import urllib.request
 from Bio import Entrez
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 mail = "lexbosch@live.nl"
@@ -12,6 +14,8 @@ mail = "lexbosch@live.nl"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if __name__ == '__main__':
+        textmining
     amount_list = 3
     return render_template("BASE.html", term_list=get_datalist_element_words(),
                            amount_input=amount_list,
@@ -31,8 +35,8 @@ def get_datalist_element_words():
 def handle_table():
     amount_list = 3
     datalist_input = get_datalist_input(amount_list)
-    plz = start_PubMed_mining(datalist_input)
-    new_data_dict = create_table(plz)
+    papers, Zoektermen = start_PubMed_mining(datalist_input)
+    new_data_dict = create_table(papers, Zoektermen)
     return render_template("BASE.html", term_list=get_datalist_element_words(),
                            amount_input=amount_list,
                            articles_list = new_data_dict,
@@ -61,11 +65,14 @@ def start_PubMed_mining(term_list):
     syntax = ""
     for term in term_list:
         syntax += "{0} AND ".format(term)
-    print(syntax[0:-5])
+    Zoektermen = syntax[0:-5]
+    print(Zoektermen)
+    ##print(syntax[0:-5])
     results = search(syntax[0:-5])
+
     id_list = results['IdList']
     papers = fetch_details(id_list)
-    return papers
+    return papers, Zoektermen
 
 
 # Details over de artikelen worden opgehaald met de IDs
@@ -101,7 +108,7 @@ def search(query):
 # Parsed de artikelen in een dictionary
 # Input: publicaties
 # Output: Markup van de table
-def create_table(publication_data):
+def create_table(publication_data, Zoektermen):
     term_list = {}
     all_article_dicts = []
     for paper in publication_data:
@@ -175,11 +182,22 @@ def create_table(publication_data):
     new_data_term_list = {}
 
     for key in term_list:
-        if term_list[key] >= 3:
+        if term_list[key] >= 5:
             new_data_term_list[key] = term_list[key]
+    try:
+        lijst = textmining.filterKeywords(new_data_term_list)
+        zoeklijst = textmining.combineerTermen(Zoektermen, lijst)
+        textmining.zoek_Extra_Artikelen(zoeklijst)
+    except urllib.error.HTTPError as er:
+        print("error")
 
 
-    #
+
+
+
+
+
+
 
 
     return all_article_dicts
