@@ -189,20 +189,6 @@ def create_table(publication_data, Zoektermen):
         textmining.zoek_Extra_Artikelen(zoeklijst)
     except urllib.error.HTTPError as er:
         print("error")
-
-
-
-
-
-
-
-<<<<<<< HEAD
-    #
-=======
-
->>>>>>> textmining
-
-
     return all_article_dicts
 
 
