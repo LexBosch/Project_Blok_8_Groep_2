@@ -1,31 +1,64 @@
+<script>
+var counter = 1;
+var limit = 3000;
+function addInput(divName){
+     if (counter == limit)  {
+          alert("You have reached the limit of adding " + counter + " inputs");
+     }
+     else {
+          var newdiv = document.createElement('div');
+          newdiv.innerHTML = "Entry " + (counter + 1) + "<div style='margin-bottom: 1em;'>\n" +
+              "                            <input list='browsers' name='datalist"+(counter)+"'>\n" +
+              "                            <datalist id='browsers' name='datalist'>\n" +
+              "                                {% for term in term_list %}\n" +
+              "                                <option value={{ term }}>\n" +
+              "                                    {% endfor %}\n" +
+              "                            </datalist>\n" +
+              "                        </div>";
+          document.getElementById(divName).appendChild(newdiv);
+          counter++;
+     }
+}
+</script>
+
 <body>
 <div class="content">
     <!-- input+submit+text -->
     <div>
         <div class="left-top" style="float:left;width:50%;">
+
             <h1>Lorem Ipsum</h1>
             <p>
                 snelle uitleg :D
+                     <input type="button" value="Add another text input" onClick="addInput('dynamicInput');">
             </p>
 
 
             <!-- Input area for serach terms -->
+
             <div>
                 <form role="form" method='POST' action='/handle_table'>
-                    {% for datalist_number in range(1, amount_input + 1) %}
-                        <div style="margin-bottom: 1em;">
-                            <input list="browsers" name="datalist{{ datalist_number }}">
-                            <datalist id="browsers" name="datalist">
+                    <div id="dynamicInput">
+                        <div style='margin-bottom: 1em;'>
+                            <input list='browsers' name='datalist0'>
+                            <datalist id='browsers' name='datalist'>
                                 {% for term in term_list %}
-                                    <option value={{ term }}>
-                                {% endfor %}
+                                <option value={{ term }}>
+                                    {% endfor %}
                             </datalist>
                         </div>
-                    {% endfor %}
+                    </div>
+                    <div style="border:solid 2px red;width:auto;border-radius: 10px;padding:1em;">
+                    <p>U kunt een mail krijgen om bericht <br>te krijgen als de operatie klaar is.</p>
+                    <input type="text" name="emailField" style="max-width: 100%;"><br><br>
+                    </div>
                     <input type="submit" style="margin-top:6px;margin-bottom: 6px;">
                 </form>
             </div>
         </div>
+        <div style="float:right;">
+
+            <img src="../../../static/adFiles/Images/InputdataFlowchart.png" height="791" width="482"/></div>
     </div>
 </div>
 </body>
