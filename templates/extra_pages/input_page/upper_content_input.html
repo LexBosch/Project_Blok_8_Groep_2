@@ -1,24 +1,24 @@
 <script>
-var counter = 1;
-var limit = 3000;
-function addInput(divName){
-     if (counter == limit)  {
-          alert("You have reached the limit of adding " + counter + " inputs");
-     }
-     else {
-          var newdiv = document.createElement('div');
-          newdiv.innerHTML = "Entry " + (counter + 1) + "<div style='margin-bottom: 1em;'>\n" +
-              "                            <input list='browsers' name='datalist"+(counter)+"'>\n" +
-              "                            <datalist id='browsers' name='datalist'>\n" +
-              "                                {% for term in term_list %}\n" +
-              "                                <option value={{ term }}>\n" +
-              "                                    {% endfor %}\n" +
-              "                            </datalist>\n" +
-              "                        </div>";
-          document.getElementById(divName).appendChild(newdiv);
-          counter++;
-     }
-}
+    var counter = 1;
+    var limit = 3000;
+
+    function addInput(divName) {
+        if (counter == limit) {
+            alert("You have reached the limit of adding " + counter + " inputs");
+        } else {
+            var newdiv = document.createElement('div');
+            newdiv.innerHTML = "<div style='margin-bottom: 1em;'>\n" +
+                "                            <input list='browsers' name='datalist" + (counter) + "'>\n" +
+                "                            <datalist id='browsers' name='datalist'>\n" +
+                "                                {% for term in term_list %}\n" +
+                    "                                <option value={{ term }}>\n" +
+                    "                                    {% endfor %}\n" +
+                "                            </datalist>\n" +
+                "                        </div>";
+            document.getElementById(divName).appendChild(newdiv);
+            counter++;
+        }
+    }
 </script>
 
 <body>
@@ -30,28 +30,31 @@ function addInput(divName){
             <h1>Lorem Ipsum</h1>
             <p>
                 snelle uitleg :D
-                     <input type="button" value="Add another text input" onClick="addInput('dynamicInput');">
+                <input type="button" value="Add another text input" onClick="addInput('dynamicInput');">
             </p>
 
 
             <!-- Input area for serach terms -->
 
             <div>
-                <form role="form" method='POST' action='/handle_table'>
+                <form role="form" method='POST' action='/input_done'>
                     <div id="dynamicInput">
                         <div style='margin-bottom: 1em;'>
                             <input list='browsers' name='datalist0'>
                             <datalist id='browsers' name='datalist'>
                                 {% for term in term_list %}
-                                <option value={{ term }}>
-                                    {% endfor %}
+                                    <option value={{ term }}>
+                                {% endfor %}
                             </datalist>
                         </div>
                     </div>
                     <div style="border:solid 2px red;width:auto;border-radius: 10px;padding:1em;">
-                    <p>U kunt een mail krijgen om bericht <br>te krijgen als de operatie klaar is.</p>
-                    <input type="text" name="emailField" style="max-width: 100%;"><br><br>
+                        <p>U can recieve a mail when the <br>operation is finished.</p>
+                        <input type="text" name="emailField" style="max-width: 100%;"><br><br>
                     </div>
+                    <p>Enter a name for the session</p>
+                    <input type="text" name="emailField" style="max-width: 100%;"><br><br>
+
                     <input type="submit" style="margin-top:6px;margin-bottom: 6px;">
                 </form>
             </div>

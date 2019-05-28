@@ -209,6 +209,12 @@ def input():
                            amount_input=amount_list,
                            pagetype = "input")
 
+@app.route('/input_done', methods=['GET', 'POST'])
+def input_done():
+    termList = get_datalist_input()
+    return render_template("BASE.html",
+                           pagetype = "input_done")
+
 
 
 @app.route('/about', methods=['GET', 'POST'])
