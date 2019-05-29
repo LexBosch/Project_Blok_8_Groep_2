@@ -1,31 +1,94 @@
+<script>
+    var counter = 1;
+    var limit = 20;
+
+    function addInput(divName) {
+        counter++;
+
+        if (counter == limit) {
+            alert("You have reached the limit of adding " + counter + " inputs");
+        } else {
+            var newdiv = document.createElement('div');
+            newdiv.innerHTML = "<div style='margin-bottom: 1em;'>\n" +
+                "<input list='datalist' name='datalist" + (counter) + "' id='datalist" + (counter) + "'>\n" +
+                "<datalist id='browsers' name='datalist'>\n" +
+                "{% for term in term_list %}\n" +
+                "<option value={{ term }}>\n" +
+                "{% endfor %}\n" +
+                "</datalist>\n" +
+                "</div>";
+            document.getElementById("amountFields").value = counter
+            document.getElementById(divName).appendChild(newdiv);
+        }
+    }
+
+    function tryToSumid() {
+        let dataElementFilled = false;
+        for (var dataElement = 1; dataElement <= counter; dataElement++) {
+            var singeDatalist = document.getElementById('datalist' + (dataElement.toString()));
+            if (singeDatalist) {
+                if (singeDatalist.value.length > 0) {
+                    dataElementFilled = true;
+                }
+            }
+        }
+        if (!(dataElementFilled)) {
+            alert("You must input at least one term");
+        } else {
+            sessionName = document.getElementById("sessionName");
+            if (sessionName.value.length == 0) {
+                alert("Please enter a name for the session");
+            } else {
+                document.getElementById("termListInput").submit();
+            }
+        }
+    }
+</script>
+
 <body>
 <div class="content">
     <!-- input+submit+text -->
     <div>
         <div class="left-top" style="float:left;width:50%;">
+
             <h1>Lorem Ipsum</h1>
             <p>
-                snelle uitleg :D
+                <input type="button" class="button_fancy" value="Add another text input"
+                       onClick="addInput('dynamicInput');">
             </p>
 
 
             <!-- Input area for serach terms -->
+
             <div>
-                <form role="form" method='POST' action='/handle_table'>
-                    {% for datalist_number in range(1, amount_input + 1) %}
-                        <div style="margin-bottom: 1em;">
-                            <input list="browsers" name="datalist{{ datalist_number }}">
-                            <datalist id="browsers" name="datalist">
+                <form role="form" method='POST' action='/input_done' id="termListInput">
+                    <div id="dynamicInput">
+                        <div style='margin-bottom: 1em;'>
+                            <input list='browsers' name='datalist1' id='datalist1'>
+                            <datalist id='browsers' name='datalist'>
                                 {% for term in term_list %}
-                                    <option value={{ term }}>
-                                {% endfor %}
+                                <option value={{ term }}>
+                                    {% endfor %}
                             </datalist>
                         </div>
-                    {% endfor %}
-                    <input type="submit" style="margin-top:6px;margin-bottom: 6px;">
+                    </div>
+                    <div style="border:solid 2px red;width:auto;border-radius: 10px;padding:1em;">
+                        <p>U can recieve a mail when the <br>operation is finished.</p>
+                        <input type="text" name="emailField" style="max-width: 100%;"><br><br>
+                    </div>
+                    <p>Enter a name for the session</p>
+                    <input type="text" id="amountFields" name="amountFields" style="display:none;" value="1">
+                    <input type="text" name="sessionNameField" style="max-width: 100%;" id="sessionName"><br><br>
+
                 </form>
+                <input type="submit" style="margin-top:6px;margin-bottom: 6px;" class="button_fancy"
+                       onClick="tryToSumid();">
+
             </div>
         </div>
+        <div style="float:right;">
+
+            <img src="../../../static/adFiles/Images/InputdataFlowchart.png" height="791" width="482"/></div>
     </div>
 </div>
 </body>

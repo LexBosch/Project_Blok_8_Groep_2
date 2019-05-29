@@ -7,8 +7,7 @@ import textmining
 import urllib.request
 from Bio import Entrez
 from flask import Flask, render_template, request
-
-
+import inputTermen
 
 app = Flask(__name__)
 mail = "lexbosch@live.nl"
@@ -21,8 +20,8 @@ def index():
     amount_list = 3
     return render_template("BASE.html", term_list=get_datalist_element_words(),
                            amount_input=amount_list,
-                           articles_list = [],
-                           pagetype = "main")
+                           articles_list=[],
+                           pagetype="main")
 
 
 def get_datalist_element_words():
@@ -41,8 +40,8 @@ def handle_table():
     new_data_dict = create_table(papers, Zoektermen)
     return render_template("BASE.html", term_list=get_datalist_element_words(),
                            amount_input=amount_list,
-                           articles_list = new_data_dict,
-                           pagetype = "main")
+                           articles_list=new_data_dict,
+                           pagetype="main")
 
 
 # [titel, jaar, autor, id]
@@ -53,7 +52,7 @@ def handle_table():
 # Output: Lijst met de ingevulde data uit de datalists
 def get_datalist_input(amount_fields):
     new_list = []
-    for x in range(0, amount_fields):
+    for x in range(0, int(amount_fields)):
         input_word = request.form['datalist{0}'.format(x + 1)]
         if input_word != "":
             new_list.append(input_word)
@@ -129,7 +128,7 @@ def create_table(publication_data, Zoektermen):
                     temp_name_dict = {"fore": author["Initials"], "last": author["LastName"]}
                     name_dict.append(temp_name_dict)
                 article_dict["Author"] = name_dict
-                #temp
+                # temp
                 for keyword in paper['MedlineCitation']['KeywordList']:
                     for term in keyword:
                         term = term.lower()
@@ -137,7 +136,7 @@ def create_table(publication_data, Zoektermen):
                             term_list[term] += 1
                         else:
                             term_list[term] = 1
-                #endtemp
+                # endtemp
             except KeyError:
                 # PubmedIDs
                 article_dict["ID"] = paper["MedlineCitation"]["PMID"]
@@ -148,8 +147,7 @@ def create_table(publication_data, Zoektermen):
                 # Authors van het artikel
                 name_dict = []
 
-
-                #temp
+                # temp
                 for keyword in paper['MedlineCitation']['KeywordList']:
                     for term in keyword:
                         term = term.lower()
@@ -157,9 +155,7 @@ def create_table(publication_data, Zoektermen):
                             term_list[term] += 1
                         else:
                             term_list[term] = 1
-                #endtemp
-
-
+                # endtemp
 
                 try:
                     for author in paper["MedlineCitation"]["Article"]["AuthorList"]:
@@ -201,26 +197,39 @@ def create_table(publication_data, Zoektermen):
 def graph():
     amount_list = 3
     return render_template("BASE.html", term_list=get_datalist_element_words(),
-                           amount_input=amount_list,
-                           articles_list = [],
-                           pagetype = "graph")
+                           articles_list=[],
+                           pagetype="graph")
+
 
 @app.route('/input', methods=['GET', 'POST'])
 def input():
     amount_list = 3
     return render_template("BASE.html",
                            amount_input=amount_list,
-                           pagetype = "input")
+                           pagetype="input")
 
+
+@app.route('/input_done', methods=['GET', 'POST'])
+def input_done():
+    amountDatalist = request.form['amountFields']
+    termList = get_datalist_input(amountDatalist)
+    email = request.form['emailField']
+    sessionName = request.form['sessionNameField']
+    print("termen:\t"+", ".join(termList) +
+    "\nemail:\t" + email +
+    "\nsessienaam:\t" + sessionName)
+    inputTermen.StartPubMedSearch(termList, sessionName, email)
+    return render_template("BASE.html",
+                           pagetype="input_done")
 
 
 @app.route('/about', methods=['GET', 'POST'])
 def about():
     return render_template("BASE.html",
-                           pagetype = "about")
+                           pagetype="about")
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
-
 
 

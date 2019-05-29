@@ -4,6 +4,36 @@
     <div>
         <div class="left-top" style="float:left;width:100%;">
             <h1>Node Graph</h1>
+            <div>
+                <form role="form" method='POST' action='/graph' id="termListInput" cellpadding="10">
+
+                    <table>
+                        <tr>
+                            <td><p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
+                                <select id = "selectSession">
+                                    <option value="none">-</option>
+                                    <option value="session69">session69</option>
+                                    <option value="420">420</option>
+
+                                </select></td>
+                            <td style="float:right;text-align: right;">
+                                <p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
+                                <select>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="all">All</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="submit" style="margin-top:6px;margin-bottom: 6px;" class="button_fancy">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
 
 
             <!-- Input area for serach terms -->

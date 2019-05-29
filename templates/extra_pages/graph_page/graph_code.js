@@ -1,5 +1,6 @@
 /* global Promise, fetch, window, cytoscape, document, tippy, _ */
-
+filename = fileSelecter = document.getElementById("selectSession");
+alert(filename.toString());
 Promise.all([
     fetch("{{ url_for('static', filename='adFiles/graph_files/cy-style.json') }}")
         .then(function (res) {
