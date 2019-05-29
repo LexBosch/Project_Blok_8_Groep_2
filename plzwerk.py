@@ -15,8 +15,6 @@ mail = "lexbosch@live.nl"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if __name__ == '__main__':
-        textmining
     amount_list = 3
     return render_template("BASE.html", term_list=get_datalist_element_words(),
                            amount_input=amount_list,
@@ -215,10 +213,11 @@ def input_done():
     termList = get_datalist_input(amountDatalist)
     email = request.form['emailField']
     sessionName = request.form['sessionNameField']
+    amountSearch = request.form['depthSearch']
     print("termen:\t"+", ".join(termList) +
     "\nemail:\t" + email +
     "\nsessienaam:\t" + sessionName)
-    inputTermen.StartPubMedSearch(termList, sessionName, email)
+    inputTermen.StartPubMedSearch(termList, sessionName, email, amountDatalist)
     return render_template("BASE.html",
                            pagetype="input_done")
 
