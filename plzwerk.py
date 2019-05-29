@@ -83,11 +83,11 @@ def start_PubMed_mining(term_list):
 def fetch_details(id_list):
     ids = ','.join(id_list)
     Entrez.email = mail
-    handle = Entrez.efetch(db='pubmed',
+    handle_details = Entrez.efetch(db='pubmed',
                            retmode='xml',
                            id=ids)
     try:
-        results = Entrez.read(handle)["PubmedArticle"]
+        results = Entrez.read(handle_details)["PubmedArticle"]
     except RuntimeError:
         results = "Niets gevonden"
     return results
@@ -98,12 +98,12 @@ def fetch_details(id_list):
 # Output: Lijst met de resultaten
 def search(query):
     Entrez.email = mail
-    handle = Entrez.esearch(db='pubmed',
+    handle_search = Entrez.esearch(db='pubmed',
                             sort='relevance',
                             retmax='10000',
                             retmode='xml',
                             term=query + """ AND ("2010"[Date - Create] : "3000"[Date - Create]) AND English[Language]""")
-    results = Entrez.read(handle)
+    results = Entrez.read(handle_search)
     return results
 
 
@@ -172,9 +172,7 @@ def create_table(publication_data, Zoektermen):
                     name_dict.append({"fore": "No authors found", "last": ""})
                 article_dict["Author"] = name_dict
             except TypeError:
-                for author in paper["MedlineCitation"]["Article"]["AuthorList"]:
-                    print(author["AffiliationInfo"])
-                    print(author["LastName"])
+                print()
         if article_dict:
             all_article_dicts.append(article_dict)
 
@@ -186,12 +184,17 @@ def create_table(publication_data, Zoektermen):
         if term_list[key] >= 5:
             new_data_term_list[key] = term_list[key]
     try:
-        lijst = textmining.filterKeywords(new_data_term_list)
-        zoeklijst = textmining.combineerTermen(Zoektermen, lijst)
-        textmining.zoek_Extra_Artikelen(zoeklijst)
+        lijst, hoogste = textmining.filterKeywords(new_data_term_list)
+        zoekstring = textmining.combineerTermen(Zoektermen, hoogste)
+        record = textmining.additional_Search1(zoekstring)
+        records = textmining.esearch2(record)
+        titellijst = textmining.getTitle(records)
+
     except urllib.error.HTTPError as er:
-        print("error")
+        print(er)
+    textmining.formatteren(titellijst)
     return all_article_dicts
+
 
 
 @app.route('/graph', methods=['GET', 'POST'])
