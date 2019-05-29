@@ -194,7 +194,6 @@ def create_table(publication_data, Zoektermen):
 def graph():
     amount_list = 3
     return render_template("BASE.html", term_list=get_datalist_element_words(),
-                           amount_input=amount_list,
                            articles_list=[],
                            pagetype="graph")
 
@@ -229,3 +228,5 @@ def about():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
+
+
