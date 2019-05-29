@@ -2,7 +2,9 @@ from collections import Counter
 from itertools import combinations
 from Bio import Entrez, Medline
 import urllib.request
+
 mail = "lexbosch@live.nl"
+
 
 def query_maken(Zoektermenlijst):
     querystring = ""
@@ -15,15 +17,17 @@ def query_maken(Zoektermenlijst):
         zoekQueryLijst.append(querystring)
     return zoekQueryLijst
 
+
 def zoekArtikelen(zoekQueryLijst):
     Entrez.email = mail
-    pubmedIDLijst =[]
+    pubmedIDLijst = []
     for item in zoekQueryLijst:
         handle_first = Entrez.esearch(db="pubmed", term=item.lower(), retmax=50, retmode="xml")
         zoekResultaat = Entrez.read(handle_first)
         handle_first.close()
         pubmedIDLijst += zoekResultaat["IdList"]
     return pubmedIDLijst
+
 
 def zoekInformatie(pubmedIDLijst):
     ids = ', '.join(pubmedIDLijst)
@@ -32,14 +36,16 @@ def zoekInformatie(pubmedIDLijst):
     try:
         results = Entrez.read(handle_seccond)["PubmedArticle"]
     except RuntimeError:
-        #todo: exceptionhandeling
+        # todo: exceptionhandeling
         print()
 
     return results
 
+
 def artikelLijstMaken(results):
-    #todo functie uitwerken
+    # todo functie uitwerken
     pass
+
 
 def keywordsLijst(results, oldTermlist):
     term_list = {}
@@ -59,39 +65,36 @@ def keywordsLijst(results, oldTermlist):
             pass
     return term_list
 
+
 def filterterm_list(term_list):
     hoogsteKeysLijst = []
     info = Counter(term_list)
     hoogste = info.most_common(10)
     for item in hoogste:
-
         hoogsteKeysLijst.append(item[0])
 
     return hoogsteKeysLijst
 
 
-
 def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     oldTermlist += ZoektermenLijst
-    aantal_zoeken = aantal_zoeken -1
+    aantal_zoeken = aantal_zoeken - 1
     zoekQueryLijst = query_maken(ZoektermenLijst)
-    #print(zoekQueryLijst)
+    # print(zoekQueryLijst)
     pubmedIDLijst = zoekArtikelen(zoekQueryLijst)
-    #print(pubmedIDLijst)
+    # print(pubmedIDLijst)
     results = zoekInformatie(pubmedIDLijst)
-    #print(results)
-    #pubmedArtikelenLijst = artikelLijstMaken(results)
-    #artikelInfoDict =
+    # print(results)
+    # pubmedArtikelenLijst = artikelLijstMaken(results)
+    # artikelInfoDict =
     if aantal_zoeken > 0:
         term_list = keywordsLijst(results, oldTermlist)
-        #print(term_list)
+        # print(term_list)
         hoogsteKeysLijst = filterterm_list(term_list)
-        #print(hoogsteKeysLijst)
+        # print(hoogsteKeysLijst)
         print(hoogsteKeysLijst)
-        return(results + textming_Start(hoogsteKeysLijst, aantal_zoeken, oldTermlist))
+        return (results + textming_Start(hoogsteKeysLijst, aantal_zoeken, oldTermlist))
     # else:
     #     return artikelInfoDict
     return results
 
-nieuwlijst = textming_Start(["Bitter", "Diabetis", "Sugar", "vitamin"], 4, [])
-print()

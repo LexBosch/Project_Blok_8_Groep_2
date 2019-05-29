@@ -79,7 +79,15 @@
                     <p>Enter a name for the session</p>
                     <input type="text" id="amountFields" name="amountFields" style="display:none;" value="1">
                     <input type="text" name="sessionNameField" style="max-width: 100%;" id="sessionName"><br><br>
-
+                                <p style="margin-bottom: 2px;">How deep must<br>it search</p>
+                                <select name = "depthSearch">
+                                    <option value="1">not deep (1)</option>
+                                    <option value="2">shallow (2)</option>
+                                    <option value="5">kiddy pool (5)</option>
+                                    <option value="10">lake (10)</option>
+                                    <option value="20">ocean (20)</option>
+                                    <option value="30">bottemless (30)</option>
+                                </select>
                 </form>
                 <input type="submit" style="margin-top:6px;margin-bottom: 6px;" class="button_fancy"
                        onClick="tryToSumid();">
