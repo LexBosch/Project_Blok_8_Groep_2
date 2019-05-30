@@ -2,6 +2,7 @@ from collections import Counter
 from itertools import combinations
 from Bio import Entrez, Medline
 import urllib.request
+import artikel
 
 mail = "lexbosch@live.nl"
 
@@ -44,7 +45,57 @@ def zoekInformatie(pubmedIDLijst):
 
 def artikelLijstMaken(results):
     # todo functie uitwerken
-    pass
+    term_list = {}
+    all_article_dicts = []
+    for paper in results:
+        if paper:
+            article_dict = {}
+            try:
+                # PubmedIDs
+                article_dict["ID"] = paper["MedlineCitation"]["PMID"]
+                # Artikel data (Deze mist nogal vaak)
+                article_dict["year"] = paper["MedlineCitation"]["DateCompleted"]["Year"]
+                # Titel van het artikel
+                article_dict["title"] = paper["MedlineCitation"]["Article"]["ArticleTitle"]
+                # Authors van het artikel
+                name_dict = []
+                for author in paper["MedlineCitation"]["Article"]["AuthorList"]:
+                    temp_name_dict = {"fore": author["Initials"], "last": author["LastName"]}
+                    name_dict.append(temp_name_dict)
+                article_dict["Author"] = name_dict
+                # temp
+                for keyword in paper['MedlineCitation']['KeywordList']:
+                    for term in keyword:
+                        term = term.lower()
+                        if term in term_list:
+                            term_list[term] += 1
+                        else:
+                            term_list[term] = 1
+                # endtemp
+            except KeyError:
+                # PubmedIDs
+                article_dict["ID"] = paper["MedlineCitation"]["PMID"]
+                # Artikel data (Deze mist nogal vaak)
+                article_dict["year"] = "Onbekend"
+                # Titel van het artikel
+                article_dict["title"] = paper["MedlineCitation"]["Article"]["ArticleTitle"]
+                # Authors van het artikel
+                name_dict = []
+            try:
+                for author in paper["MedlineCitation"]["Article"]["AuthorList"]:
+                    try:
+                        temp_name_dict = {"fore": author["Initials"], "last": author["LastName"]}
+                        name_dict.append(temp_name_dict)
+                    except KeyError:
+                        temp_name_dict = {}
+            except KeyError:
+                name_dict.append({"fore": "No authors found", "last": ""})
+                article_dict["Author"] = name_dict
+            except TypeError:
+                print()
+            if article_dict:
+                all_article_dicts.append(article_dict)
+    return all_article_dicts
 
 
 def keywordsLijst(results, oldTermlist):
@@ -85,7 +136,7 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     # print(pubmedIDLijst)
     results = zoekInformatie(pubmedIDLijst)
     # print(results)
-    # pubmedArtikelenLijst = artikelLijstMaken(results)
+    artikelLijstMaken(results)
     # artikelInfoDict =
     if aantal_zoeken > 0:
         term_list = keywordsLijst(results, oldTermlist)
@@ -98,3 +149,4 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     #     return artikelInfoDict
     return results
 
+textming_Start(("sugar", "Diebetes", "bitter gourd"), 2, [])
