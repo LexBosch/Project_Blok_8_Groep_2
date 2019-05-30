@@ -1,3 +1,7 @@
+#author: Sophie Hospel
+#date: 29-05-2019
+#databaseconnectieV1.1
+
 import mysql.connector
 from mysql.connector import errorcode
 from sessie import Session
@@ -5,10 +9,14 @@ from zoekwoord import Zoekwoord
 from artikel import Artikel
 from author import Author
 
+#nog de tabellen aan elkaar linken
+#met input proberen lijsten goed te lezen
+#inserten voor meer dan 1 regel maken
+
 
 def main():
 
-    voorbeeldlijst_session = {"Title_session":"testen", "Date_session":""}
+    voorbeeldlijst_session = {"Title_session":"testn", "Date_session":""}
     voorbeeldlijst_search_querry = {"Term":"testterm"}
     voorbeeldlijst_information_article = {"PubMedID": 50, "Title": "Testtitel", "Year_publication": 2020}
     voorbeeldlijst_author = {"Initial": "SR", "Insertion": "", "Last_name": "Hospel"}
@@ -23,16 +31,13 @@ def connectie(voorbeeldlijst_session, voorbeeldlijst_search_query, voorbeeldlijs
                                       host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
                                       database='owe7_pg1')
 
-        tabel_session_vullen(voorbeeldlijst_session, cnx)
-        tabel_search_query_vullen(voorbeeldlijst_search_query, cnx)
-        tabel_information_article_vullen(voorbeeldlijst_information_article, cnx)
-        tabel_author_vullen(voorbeeldlijst_author, cnx)
+        #tabel_session_vullen(voorbeeldlijst_session, cnx)
+        #tabel_search_query_vullen(voorbeeldlijst_search_query, cnx)
+        #tabel_information_article_vullen(voorbeeldlijst_information_article, cnx)
+        #tabel_author_vullen(voorbeeldlijst_author, cnx)
 
         sid = 1
         get_session(sid, cnx)
-        zoekwoordenlijst, search_id = get_zoekwoorden(sid, cnx)
-        artikelenlijst, artikel_id = get_articelen(search_id, cnx)
-        get_autheurs(artikel_id, cnx)
 
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -43,7 +48,6 @@ def connectie(voorbeeldlijst_session, voorbeeldlijst_search_query, voorbeeldlijs
             print(err)
     finally:
         cnx.close()
-
 
 def tabel_session_vullen(voorbeeldlijst_session, cnx):
     ###session vullen
@@ -131,8 +135,6 @@ def get_session(sid, cnx):
 
 def get_zoekwoorden(sid, cnx):
 
-    ## deze return wordt na een tijdje search_id moet nog naar gekeken worden
-
     query = """select * from owe7_pg1.search_query where idSearch_query in (select Search_query_idSearch_query from owe7_pg1.session_has_search_query where Session_idSession = {0});""".format(sid)
 
     mycursor2 = cnx.cursor()
@@ -147,6 +149,7 @@ def get_zoekwoorden(sid, cnx):
         term = regel[1]
         zoekwoord = Zoekwoord(term, artikelen)
         zoekwoorden.append(zoekwoord)
+
     return zoekwoorden, sid
 
 def get_articelen(search_id, cnx):
@@ -166,8 +169,6 @@ def get_articelen(search_id, cnx):
         titel = regel[2]
         publicatiedatum = regel[3]
         artikel = Artikel(pubmedid, titel, publicatiedatum, authors)
-
-
         artikelen.append(artikel)
 
     return artikelen, search_id
