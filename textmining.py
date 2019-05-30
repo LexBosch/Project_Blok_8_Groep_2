@@ -136,7 +136,7 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     # print(pubmedIDLijst)
     results = zoekInformatie(pubmedIDLijst)
     # print(results)
-    artikelLijstMaken(results)
+    all_article_dicts = artikelLijstMaken(results)
     # artikelInfoDict =
     if aantal_zoeken > 0:
         term_list = keywordsLijst(results, oldTermlist)
