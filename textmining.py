@@ -1,6 +1,7 @@
 from collections import Counter
 from itertools import combinations
 from Bio import Entrez, Medline
+from artikel import Artikel
 import urllib.request
 import artikel
 
@@ -64,13 +65,7 @@ def artikelLijstMaken(results):
                     name_dict.append(temp_name_dict)
                 article_dict["Author"] = name_dict
                 # temp
-                for keyword in paper['MedlineCitation']['KeywordList']:
-                    for term in keyword:
-                        term = term.lower()
-                        if term in term_list:
-                            term_list[term] += 1
-                        else:
-                            term_list[term] = 1
+
                 # endtemp
             except KeyError:
                 # PubmedIDs
@@ -96,6 +91,10 @@ def artikelLijstMaken(results):
             if article_dict:
                 all_article_dicts.append(article_dict)
     return all_article_dicts
+
+def objectmaken(all_article_dicts):
+    artikel.Artikel_vullen(all_article_dicts)
+
 
 
 def keywordsLijst(results, oldTermlist):
@@ -137,6 +136,7 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     results = zoekInformatie(pubmedIDLijst)
     # print(results)
     all_article_dicts = artikelLijstMaken(results)
+    objectmaken(all_article_dicts)
     # artikelInfoDict =
     if aantal_zoeken > 0:
         term_list = keywordsLijst(results, oldTermlist)

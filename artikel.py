@@ -1,3 +1,4 @@
+import textmining
 class Artikel(object):
     def __init__(self, pubmed_id, titel, pub_datum, authors):
         self.__pubmed_id = pubmed_id
@@ -16,3 +17,27 @@ class Artikel(object):
 
     def get_authors(self):
         return self.__authors
+
+def Artikel_vullen(all_article_dicts):
+    idLijst = []
+    titelLijst = []
+    pub_datumLijst = []
+    authorsLijst = []
+
+    for variabele in all_article_dicts:
+
+        idLijst.append(variabele["ID"])
+        titelLijst.append(variabele["title"])
+        try:
+
+            pub_datumLijst.append(variabele["year"])
+            authorsLijst.append(variabele["Author"])
+        except KeyError:
+            pass
+
+
+        lijstArtikelen = Artikel(idLijst, titelLijst, pub_datumLijst, authorsLijst)
+        return lijstArtikelen
+
+
+
