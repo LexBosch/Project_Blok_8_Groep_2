@@ -12,3 +12,6 @@ class Author(object):
 
     def get_last_name(self):
         return self.__last_name
+
+    def __str__(self):
+        return str(self.__initial, self.get_insertion(), self.get_last_name())
