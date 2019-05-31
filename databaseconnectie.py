@@ -238,6 +238,8 @@ def get_autheurs(resultaat_artikelen, cnx):
     #select * from owe7_pg1.author where idAuthor in
 	#   (select Author_idAuthor from owe7_pg1.author_has_information_article where Information_article_idInformation_article = 21
     #       or Information_article_idInformation_article = 1);
+
+
     mycursor2 = cnx.cursor()
     mycursor2.execute(query)
     myresult = mycursor2.fetchall()
