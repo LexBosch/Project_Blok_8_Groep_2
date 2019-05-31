@@ -2,6 +2,8 @@ import threading
 import time
 from datetime import date
 import textmining
+import sessie
+import zoekwoord
 
 
 class pubMedThread(threading.Thread):
@@ -14,8 +16,32 @@ class pubMedThread(threading.Thread):
         self.searchDept = searchDepth
 
     def run(self):
-        textmining.textming_Start(self.termList, self.searchDept, [])
+        pubmedresults, termsfound = textmining.textming_Start(self.termList, self.searchDept, [])
+        sessionobject = self.createSessionObject(pubmedresults, termsfound)
+        #Sophie, hier kan je de database aanroepen
         print()
+
+
+
+
+    def createSessionObject(self, articleResults, termsFound):
+        return sessie.Session(
+            self.sessionName,
+            self.currentDate,
+            self.createTermObject(articleResults, termsFound)
+        )
+
+    def createTermObject(self, found_articles, terms):
+        termList = []
+        for singeleterm in terms:
+            articleList = []
+            for singleArticle in found_articles:
+                if singeleterm in singleArticle["terms"]:
+                    articleList.append(singleArticle["articleObject"])
+            termList.append(zoekwoord.Zoekwoord(singeleterm, articleList))
+        return termList
+
+
 
 
 def StartPubMedSearch(searchTermList, sessionName, email, depthSearch):

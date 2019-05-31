@@ -4,9 +4,9 @@ from Bio import Entrez, Medline
 from artikel import Artikel
 import urllib.request
 import artikel
+import author
 
 mail = "lexbosch@live.nl"
-
 
 def query_maken(Zoektermenlijst):
     querystring = ""
@@ -21,26 +21,32 @@ def query_maken(Zoektermenlijst):
 
 
 def zoekArtikelen(zoekQueryLijst):
+    PubmedResult = []
     Entrez.email = mail
-    pubmedIDLijst = []
+    articleObject = []
     for item in zoekQueryLijst:
-        handle_first = Entrez.esearch(db="pubmed", term=item.lower(), retmax=50, retmode="xml")
+        handle_first = Entrez.esearch(db="pubmed", term=item, retmax=100, retmode="xml")
         zoekResultaat = Entrez.read(handle_first)
         handle_first.close()
-        pubmedIDLijst += zoekResultaat["IdList"]
-    return pubmedIDLijst
+        pubmedIDLijst = zoekResultaat["IdList"]
+        try:
+            PubmedResult = zoekInformatie(pubmedIDLijst)
+            articleObject += (createArticleObject(PubmedResult))
+        except UnboundLocalError as ule:
+            #No articles found
+            pass
+            print("errored")
+    return PubmedResult, articleObject
 
 
 def zoekInformatie(pubmedIDLijst):
     ids = ', '.join(pubmedIDLijst)
     handle_seccond = Entrez.efetch(db="pubmed", id=ids, rettype="medline", retmode="xml")
-
     try:
         results = Entrez.read(handle_seccond)["PubmedArticle"]
     except RuntimeError:
         # todo: exceptionhandeling
         print()
-
     return results
 
 
@@ -119,11 +125,73 @@ def keywordsLijst(results, oldTermlist):
 def filterterm_list(term_list):
     hoogsteKeysLijst = []
     info = Counter(term_list)
-    hoogste = info.most_common(10)
+    hoogste = info.most_common(5)
     for item in hoogste:
         hoogsteKeysLijst.append(item[0])
-
     return hoogsteKeysLijst
+
+
+def createArticleObject(ArticleList):
+    newArticleList = []
+    for singleArticle in ArticleList:
+        articleAndTermsDict = {}
+        try:
+            articleAndTermsDict["articleObject"] = (artikel.Artikel(
+                singleArticle["MedlineCitation"]["PMID"],
+                singleArticle["MedlineCitation"]["Article"]["ArticleTitle"],
+                singleArticle["MedlineCitation"]["DateCompleted"]["Year"],
+                createAuthorObject(singleArticle["MedlineCitation"]["Article"]["AuthorList"])
+            ))
+            articleAndTermsDict["terms"] = singleArticle['MedlineCitation']['KeywordList'][0]
+            newArticleList.append(articleAndTermsDict)
+        except KeyError:
+            try:
+                articleAndTermsDict["articleObject"] = (artikel.Artikel(
+                    singleArticle["MedlineCitation"]["PMID"],
+                    singleArticle["MedlineCitation"]["Article"]["ArticleTitle"],
+                    singleArticle["MedlineCitation"]["Article"]["ArticleDate"]["Year"],
+                    createAuthorObject(singleArticle["MedlineCitation"]["Article"]["AuthorList"])
+                ))
+                articleAndTermsDict["terms"] = singleArticle['MedlineCitation']['KeywordList'][0]
+                newArticleList.append(articleAndTermsDict)
+
+            except IndexError:
+                print("dateError")
+            except TypeError:
+                try:
+                    articleAndTermsDict["articleObject"] = (artikel.Artikel(
+                        singleArticle["MedlineCitation"]["PMID"],
+                        singleArticle["MedlineCitation"]["Article"]["ArticleTitle"],
+                        singleArticle["MedlineCitation"]["Article"]["ArticleDate"][0]["Year"],
+                        createAuthorObject(singleArticle["MedlineCitation"]["Article"]["AuthorList"])
+                    ))
+                    articleAndTermsDict["terms"] = singleArticle['MedlineCitation']['KeywordList'][0]
+                    newArticleList.append(articleAndTermsDict)
+
+                except IndexError:
+                    pass
+                except KeyError:
+                    #No authors found
+                    pass
+        except IndexError:
+            pass
+    return newArticleList
+
+
+
+def createAuthorObject(AuthorList):
+    newAuthorList = []
+    for singleAuthor in AuthorList:
+        try:
+            newAuthorList.append(author.Author(
+                singleAuthor["Initials"],
+                "",
+                singleAuthor["LastName"]
+            ))
+        except KeyError:
+            #Author not correctly noted
+            pass
+    return newAuthorList
 
 
 def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
@@ -131,12 +199,12 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     aantal_zoeken = aantal_zoeken - 1
     zoekQueryLijst = query_maken(ZoektermenLijst)
     # print(zoekQueryLijst)
-    pubmedIDLijst = zoekArtikelen(zoekQueryLijst)
+    results, pubmedIDLijst = zoekArtikelen(zoekQueryLijst)
     # print(pubmedIDLijst)
-    results = zoekInformatie(pubmedIDLijst)
+  #  results, ArticleTermList = zoekInformatie(pubmedIDLijst)
     # print(results)
-    all_article_dicts = artikelLijstMaken(results)
-    objectmaken(all_article_dicts)
+   # all_article_dicts = artikelLijstMaken(results)
+   # objectmaken(all_article_dicts)
     # artikelInfoDict =
     if aantal_zoeken > 0:
         term_list = keywordsLijst(results, oldTermlist)
@@ -144,9 +212,9 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
         hoogsteKeysLijst = filterterm_list(term_list)
         # print(hoogsteKeysLijst)
         print(hoogsteKeysLijst)
-        return (results + textming_Start(hoogsteKeysLijst, aantal_zoeken, oldTermlist))
+        NewpubmedIDLijst, oldtermlist = textming_Start(hoogsteKeysLijst, aantal_zoeken, oldTermlist)
+        return (pubmedIDLijst + NewpubmedIDLijst), oldtermlist
     # else:
     #     return artikelInfoDict
-    return results
+    return pubmedIDLijst, oldTermlist
 
-textming_Start(("sugar", "Diebetes", "bitter gourd"), 2, [])
