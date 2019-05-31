@@ -16,3 +16,9 @@ class Artikel(object):
 
     def get_authors(self):
         return self.__authors
+
+    def __str__(self):
+        return str(self.__titel)
+
+    def __int__(self):
+        return int(self.__pubmed_id, self.__pub_datum)

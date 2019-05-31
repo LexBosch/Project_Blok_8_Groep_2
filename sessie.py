@@ -12,3 +12,10 @@ class Session(object):
 
     def get_zoekwoorden(self):
         return self.__zoekwoorden
+
+    def __str__(self):
+        return str(self.get_titel())
+
+    def __int__(self):
+        return int(self.get_datum())
+

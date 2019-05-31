@@ -8,3 +8,6 @@ class Zoekwoord(object):
 
     def get_artikelen(self):
         return self.__artikelen
+
+    def __str__(self):
+        return str(self.__term)
