@@ -5,16 +5,11 @@ class Session(object):
         self.__zoekwoorden = zoekwoorden
 
     def get_titel(self):
-        return self.__titel
+        return str(self.__titel)
 
     def get_datum(self):
-        return self.__datum
+        return str(self.__datum)
 
     def get_zoekwoorden(self):
         return self.__zoekwoorden
 
-    def __str__(self):
-        return str(self.get_titel())
-
-    def __int__(self):
-        return int(self.get_datum())

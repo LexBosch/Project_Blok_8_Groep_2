@@ -4,10 +4,8 @@ class Zoekwoord(object):
         self.__artikelen = artikelen
 
     def get_term(self):
-        return self.__term
+        return str(self.__term)
 
     def get_artikelen(self):
         return self.__artikelen
 
-    def __str__(self):
-        return str(self.__term)

@@ -5,13 +5,11 @@ class Author(object):
         self.__last_name = last_name
 
     def get_initial(self):
-        return self.__initial
+        return str(self.__initial)
 
     def get_insertion(self):
-        return self.__insertion
+        return str(self.__insertion)
 
     def get_last_name(self):
-        return self.__last_name
+        return str(self.__last_name)
 
-    def __str__(self):
-        return str(self.__initial, self.get_insertion(), self.get_last_name())
