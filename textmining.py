@@ -98,8 +98,8 @@ def artikelLijstMaken(results):
                 all_article_dicts.append(article_dict)
     return all_article_dicts
 
-def objectmaken(all_article_dicts):
-    artikel.Artikel_vullen(all_article_dicts)
+
+
 
 
 
@@ -203,8 +203,10 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     # print(pubmedIDLijst)
   #  results, ArticleTermList = zoekInformatie(pubmedIDLijst)
     # print(results)
+
    # all_article_dicts = artikelLijstMaken(results)
    # objectmaken(all_article_dicts)
+
     # artikelInfoDict =
     if aantal_zoeken > 0:
         term_list = keywordsLijst(results, oldTermlist)
@@ -217,4 +219,3 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     # else:
     #     return artikelInfoDict
     return pubmedIDLijst, oldTermlist
-
