@@ -18,6 +18,7 @@ class pubMedThread(threading.Thread):
     def run(self):
         pubmedresults, termsfound = textmining.textming_Start(self.termList, self.searchDept, [])
         sessionobject = self.createSessionObject(pubmedresults, termsfound)
+
         #Sophie, hier kan je de database aanroepen
         print()
 

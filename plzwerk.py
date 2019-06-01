@@ -8,6 +8,7 @@ import urllib.request
 from Bio import Entrez
 from flask import Flask, render_template, request
 import inputTermen
+import visualiseGraph
 
 app = Flask(__name__)
 mail = "lexbosch@live.nl"
@@ -81,8 +82,8 @@ def fetch_details(id_list):
     ids = ','.join(id_list)
     Entrez.email = mail
     handle_details = Entrez.efetch(db='pubmed',
-                           retmode='xml',
-                           id=ids)
+                                   retmode='xml',
+                                   id=ids)
     try:
         results = Entrez.read(handle_details)["PubmedArticle"]
     except RuntimeError:
@@ -96,10 +97,10 @@ def fetch_details(id_list):
 def search(query):
     Entrez.email = mail
     handle_search = Entrez.esearch(db='pubmed',
-                            sort='relevance',
-                            retmax='10000',
-                            retmode='xml',
-                            term=query + """ AND ("2010"[Date - Create] : "3000"[Date - Create]) AND English[Language]""")
+                                   sort='relevance',
+                                   retmax='10000',
+                                   retmode='xml',
+                                   term=query + """ AND ("2010"[Date - Create] : "3000"[Date - Create]) AND English[Language]""")
     results = Entrez.read(handle_search)
     return results
 
@@ -190,13 +191,40 @@ def create_table(publication_data, Zoektermen):
     return all_article_dicts
 
 
+@app.route('/graphShown', methods=['POST', 'GET'])
+def graphShown():
+    sessionName = request.form['selectSession']
+    amountShow = request.form['selectAmount']
+    if (sessionName == "-"):
+        return render_template("BASE.html", term_list=get_datalist_element_words(),
+                               articles_list=[],
+                               pagetype="graph",
+                               session_list=visualiseGraph.get_Sessions())
+    else:
+        print("SessionID:\t", sessionName)
+        print("Amountshow\t", amountShow)
+        return render_template("BASE.html", term_list=get_datalist_element_words(),
+                               articles_list=[],
+                               pagetype="graph",
+                               session_list=visualiseGraph.get_Sessions())
 
-@app.route('/graph', methods=['GET', 'POST'])
+
+@app.route('/graph', methods=['POST', 'GET'])
 def graph():
-    amount_list = 3
+    # sessionName = request.form['selectSession']
+    # amountShow = request.form['selectAmount']
+    # if (sessionName == "-"):
     return render_template("BASE.html", term_list=get_datalist_element_words(),
                            articles_list=[],
-                           pagetype="graph")
+                           pagetype="graph",
+                           session_list=visualiseGraph.get_Sessions())
+    # else:
+    #     print(sessionName)
+    #     print(amountShow)
+    #     return render_template("BASE.html", term_list=get_datalist_element_words(),
+    #                            articles_list=[],
+    #                            pagetype="graph",
+    #                            session_list=visualiseGraph.get_Sessions())
 
 
 @app.route('/input', methods=['GET', 'POST'])
@@ -214,9 +242,9 @@ def input_done():
     email = request.form['emailField']
     sessionName = request.form['sessionNameField']
     amountSearch = request.form['depthSearch']
-    print("termen:\t"+", ".join(termList) +
-    "\nemail:\t" + email +
-    "\nsessienaam:\t" + sessionName)
+    print("termen:\t" + ", ".join(termList) +
+          "\nemail:\t" + email +
+          "\nsessienaam:\t" + sessionName)
     inputTermen.StartPubMedSearch(termList, sessionName, email, amountDatalist)
     return render_template("BASE.html",
                            pagetype="input_done")
@@ -230,5 +258,3 @@ def about():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
-
-

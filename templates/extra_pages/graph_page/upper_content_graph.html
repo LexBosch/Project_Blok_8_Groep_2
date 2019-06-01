@@ -5,20 +5,23 @@
         <div class="left-top" style="float:left;width:100%;">
             <h1>Node Graph</h1>
             <div>
-                <form role="form" method='POST' action='/graph' id="termListInput" cellpadding="10">
+                <form role="form" method='POST' action='/graphShown' id="termListInput" cellpadding="10">
 
                     <table>
                         <tr>
                             <td><p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
-                                <select id = "selectSession">
-                                    <option value="none">-</option>
-                                    <option value="session69">session69</option>
-                                    <option value="420">420</option>
+                                <select id="selectSession" name = "selectSession">
+                                            <option value = ""> - </option>
+
+
+                                    {% for session in session_list %}
+                                            <option value = {{ session["sesId"] }}>{{ session["sessionName"] }}</option>
+                                    {% endfor %}
 
                                 </select></td>
                             <td style="float:right;text-align: right;">
                                 <p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
-                                <select>
+                                <select name = "selectAmount">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="25">25</option>
@@ -52,15 +55,16 @@
             <th><p>link</p></th>
         </tr>
         {% for data_row in articles_list %}
-        <tr>
-            <td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/{{data_row['ID']}}">{{data_row["title"]}}</a></p></td>
-            <td><p>{{data_row["year"]}}</p></td>
-            <td><p>
-                {% for author in data_row["Author"] %}
-                {{author["fore"]}}. {{author["last"]}},
-                {% endfor %}
-            </p></td>
-        </tr>
+            <tr>
+                <td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/{{ data_row['ID'] }}">{{ data_row["title"] }}</a>
+                </p></td>
+                <td><p>{{ data_row["year"] }}</p></td>
+                <td><p>
+                    {% for author in data_row["Author"] %}
+                        {{ author["fore"] }}. {{ author["last"] }},
+                    {% endfor %}
+                </p></td>
+            </tr>
         {% endfor %}
     </table>
 </div>
