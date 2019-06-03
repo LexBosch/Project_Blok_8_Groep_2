@@ -3,6 +3,7 @@ from datetime import date
 import textmining
 from Object import sessie, zoekwoord
 import visualiseGraph
+import mail
 
 
 class pubMedThread(threading.Thread):
@@ -21,6 +22,7 @@ class pubMedThread(threading.Thread):
 
         visualiseGraph.createNewGraph(sessionobject)
         #Sophie, hier kan je de database aanroepen
+        #mail.Mail(self.email, self.sessionName)
 
         print()
 
