@@ -1,9 +1,7 @@
 import threading
-import time
 from datetime import date
 import textmining
-import sessie
-import zoekwoord
+from Object import sessie, zoekwoord
 import visualiseGraph
 
 
