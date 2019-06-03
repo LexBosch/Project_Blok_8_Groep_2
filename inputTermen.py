@@ -6,6 +6,7 @@ import sessie
 import zoekwoord
 import visualiseGraph
 
+
 class pubMedThread(threading.Thread):
     def __init__(self, termList, sessionName, currentDate, email, searchDepth):
         threading.Thread.__init__(self)
@@ -22,6 +23,7 @@ class pubMedThread(threading.Thread):
 
         visualiseGraph.createNewGraph(sessionobject)
         #Sophie, hier kan je de database aanroepen
+
         print()
 
 
