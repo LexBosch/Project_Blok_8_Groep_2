@@ -6,6 +6,7 @@ import sessie
 import zoekwoord
 
 
+
 class pubMedThread(threading.Thread):
     def __init__(self, termList, sessionName, currentDate, email, searchDepth):
         threading.Thread.__init__(self)
@@ -20,6 +21,7 @@ class pubMedThread(threading.Thread):
         sessionobject = self.createSessionObject(pubmedresults, termsfound)
 
         #Sophie, hier kan je de database aanroepen
+
         print()
 
 
