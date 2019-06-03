@@ -1,76 +1,102 @@
 <body>
-<div class="content">
-    <!-- input+submit+text -->
-    <div>
-        <div class="left-top" style="float:left;width:100%;">
-            <h1>Node Graph</h1>
-            <div>
-                <form role="form" method='GET' action='/graphShown' id="termListInput" cellpadding="10">
+<script>
+    function filltable(tableData) {
+        var filledTable = "";
+        for (var article in tableData) {
+            var titel = tableData[article]["titel"];
+            var pmID = tableData[article]["pmID"];
+            var pmDate = tableData[article]["pubdate"];
+            var authorString = "";
+            for (singleAuthor in tableData[article]["authors"]) {
+                authorString += tableData[article]["authors"][singleAuthor]["fore"] + '. ' + tableData[article]["authors"][singleAuthor]["last"]
+            }
+            newRow = '<tr>' +
+                '<td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/' + pmID + '">' + titel + '</a></p></td>' +
+                '<td><p>' + pmDate + '</p></td>' +
+                '<td>' + authorString + '</td>' +
+                '</tr>';
+            filledTable += newRow;
+        }
+        console.log(filledTable);
+        document.getElementById("inserTable").innerHTML = filledTable;
+    }
 
-                    <table>
-                        <tr>
-                            <td><p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
-                                <select id="selectSession" name = "selectSession">
-                                            <option value = ""> - </option>
-
-
-                                    {% for session in session_list %}
-                                            <option value = {{ session["sesId"] }}>{{ session["sessionName"] }}</option>
-                                    {% endfor %}
-
-                                </select></td>
-                            <td style="float:right;text-align: right;">
-                                <p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
-                                <select name = "selectAmount">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                    <option value="all">All</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="submit" style="margin-top:6px;margin-bottom: 6px;" class="button_fancy">
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
+</script>
 
 
-            <!-- Input area for serach terms -->
-            <div>
-                {% include "extra_pages/graph_page/graph_main.html" %}
-            </div>
+< class="content">
+<!-- input+submit+text -->
+<div>
+    <div class="left-top" style="float:left;width:100%;">
+        <h1>Node Graph</h1>
+        <div>
+            <form role="form" method='GET' action='/graphShown' id="termListInput" cellpadding="10">
+
+                <table>
+                    <tr>
+                        <td><p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
+                            <select id="selectSession" name="selectSession">
+                                <option value=""> -</option>
+
+
+                                {% for session in session_list %}
+                                <option value={{ session[
+                                "sesId"] }}>{{ session["sessionName"] }}</option>
+                                {% endfor %}
+
+                            </select></td>
+                        <td style="float:right;text-align: right;">
+                            <p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
+                            <select name="selectAmount">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="all">All</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="submit" style="margin-top:6px;margin-bottom: 6px;" class="button_fancy">
+                        </td>
+                    </tr>
+                </table>
+            </form>
         </div>
 
-        <!-- nice new graph -->
+
+        <!-- Input area for serach terms -->
+        <div>
+            {% include "extra_pages/graph_page/graph_main.html" %}
+        </div>
     </div>
-    <!-- table -->
-    <table id="artTable" width="100%" style="text-align:left;">
-        <tr>
-            <th><p>Article name</p></th>
-            <th><p>Publicasion date</p></th>
-            <th><p>link</p></th>
-        </tr>
-        <div id="tableToFill">
 
-        </div>
+    <!-- nice new graph -->
+</div>
+<!-- table -->
+
+<table id="artTable" width="100%" style="text-align:left;">
+    <tr>
+        <th><p>Article name</p></th>
+        <th><p>Publicasion date</p></th>
+        <th><p>link</p></th>
+    </tr>
+    <tbody id="inserTable" class=artTable>
+
+    </tbody>
 
 
-        <!--{% for data_row in articles_list %}-->
-            <!--<tr>-->
-                <!--<td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/{{ data_row['ID'] }}">{{ data_row["title"] }}</a>-->
-                <!--</p></td>-->
-                <!--<td><p>{{ data_row["year"] }}</p></td>-->
-                <!--<td><p>-->
-                    <!--{% for author in data_row["Author"] %}-->
-                        <!--{{ author["fore"] }}. {{ author["last"] }},-->
-                    <!--{% endfor %}-->
-                <!--</p></td>-->
-            <!--</tr>-->
-        <!--{% endfor %}-->
-    </table>
+    <!--{% for data_row in articles_list %}-->
+    <!--<tr>-->
+    <!--<td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/{{ data_row['ID'] }}">{{ data_row["title"] }}</a></p></td>-->
+    <!--<td><p>{{ data_row["year"] }}</p></td>-->
+    <!--<td><p>-->
+    <!--{% for author in data_row["Author"] %}-->
+    <!--{{ author["fore"] }}. {{ author["last"] }},-->
+    <!--{% endfor %}-->
+    <!--</p></td>-->
+    <!--</tr>-->
+    <!--{% endfor %}-->
+</table>
 </div>
 </body>

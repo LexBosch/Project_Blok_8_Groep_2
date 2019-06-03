@@ -53,8 +53,8 @@ def terms(termObjList):
                                         "pmId": article.get_pubmed_id(),
                                         "authors": createAuthorList(article)})
             edgeName = str(termID) + "00100" + str(termObjList.index(otherTermOjcect) + 1)
-
-            jsonFile.append(createArticleEdge(termID, termObjList.index(otherTermOjcect) + 1, connScore, edgeName, articleList))
+            if(connScore > 0):
+                jsonFile.append(createArticleEdge(termID, termObjList.index(otherTermOjcect) + 1, connScore, edgeName, articleList))
 
 
     return jsonFile
@@ -120,6 +120,6 @@ def createArticleEdge(termId1, termId2, score, linkId, articleList):
     articlEdge["data"]["target"] = termId2
     articlEdge["data"]["weight"] = score
     articlEdge["data"]["id"] = linkId
-    articlEdge["articles"] = articleList
+    articlEdge["data"]["articles"] = articleList
 
     return articlEdge

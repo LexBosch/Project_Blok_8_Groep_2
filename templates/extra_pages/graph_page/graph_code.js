@@ -144,6 +144,7 @@ Promise.all([
             $input.addEventListener('change', update);
         }
 
+
         function makeButton(opts) {
             var $button = h('button', {'class': 'btn btn-default'}, [opts.label]);
 
@@ -206,12 +207,15 @@ Promise.all([
 
 
         cy.edges().forEach(function (n) {
-            var g = n.data('name');
 
+            var g = n.data('name');
+            var articleData = n.data('articles');
             var $links = [
                 {
                     name: g,
-                    url: 'https://downloadmoreram.com'
+                    url: 'https://downloadmoreram.com',
+                    dataFromArticle: articleData
+
                 }
             ].map(function (link) {
                 // <input type="submit" name="submit" value="Do Something">
@@ -227,9 +231,10 @@ Promise.all([
                         '    overflow: hidden;' +
                         '    outline:none;',
                     'button': 'getElementById(\'tableToFill\').innerHTML=Date()',
-                    'value': 'View articles',
-                }, [t(link.name)]);
+                    'onclick': 'filltable('+JSON.stringify(link.dataFromArticle)+')',
+                }, [t('Laat artikelen zien')]);
             });
+
 
             var tippy = makeTippy(n, h('div', {}, $links));
 

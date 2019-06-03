@@ -1515,3 +1515,27 @@ a {
 }
 
 .button_fancy:hover {opacity: 1}
+
+
+.artTable {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.artTable td, #artTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.artTable tr:nth-child(even){background-color: #f2f2f2;}
+
+.artTable tr:hover {background-color: #ddd;}
+
+.artTable th {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: left;
+  background-color: #f44336;
+  color: white;
+}
