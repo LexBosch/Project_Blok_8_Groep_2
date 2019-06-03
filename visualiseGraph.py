@@ -1,8 +1,3 @@
-import databaseconnectie
-import sessie
-import zoekwoord
-import artikel
-import author
 import json
 
 def showPage():

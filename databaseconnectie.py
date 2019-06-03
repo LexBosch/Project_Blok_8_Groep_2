@@ -8,10 +8,10 @@
 
 import mysql.connector
 from mysql.connector import errorcode
-from sessie import Session
-from zoekwoord import Zoekwoord
-from artikel import Artikel
-from author import Author
+from Object.sessie import Session
+from Object.zoekwoord import Zoekwoord
+from Object.artikel import Artikel
+from Object.author import Author
 
 
 def connectie():

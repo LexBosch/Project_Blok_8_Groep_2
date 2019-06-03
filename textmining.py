@@ -4,7 +4,7 @@
 from collections import Counter
 from itertools import combinations
 from Bio import Entrez
-from Objecten import artikel, author
+from Object import artikel, author
 
 mail = "lexbosch@live.nl"
 
