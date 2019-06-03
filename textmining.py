@@ -76,7 +76,6 @@ def artikelLijstMaken(results):
     :param results: pubmedoutput
     :return: all_article_dicts [lijst van Stringelementen]
     """
-    # todo functie uitwerken
     term_list = {}
     all_article_dicts = []
     for paper in results:
