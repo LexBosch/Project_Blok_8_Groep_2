@@ -3,11 +3,8 @@
 
 from collections import Counter
 from itertools import combinations
-from Bio import Entrez, Medline
-from artikel import Artikel
-import urllib.request
-import artikel
-import author
+from Bio import Entrez
+from Objecten import artikel, author
 
 mail = "lexbosch@live.nl"
 
