@@ -5,7 +5,7 @@
         <div class="left-top" style="float:left;width:100%;">
             <h1>Node Graph</h1>
             <div>
-                <form role="form" method='POST' action='/graphShown' id="termListInput" cellpadding="10">
+                <form role="form" method='GET' action='/graphShown' id="termListInput" cellpadding="10">
 
                     <table>
                         <tr>
@@ -54,18 +54,23 @@
             <th><p>Publicasion date</p></th>
             <th><p>link</p></th>
         </tr>
-        {% for data_row in articles_list %}
-            <tr>
-                <td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/{{ data_row['ID'] }}">{{ data_row["title"] }}</a>
-                </p></td>
-                <td><p>{{ data_row["year"] }}</p></td>
-                <td><p>
-                    {% for author in data_row["Author"] %}
-                        {{ author["fore"] }}. {{ author["last"] }},
-                    {% endfor %}
-                </p></td>
-            </tr>
-        {% endfor %}
+        <div id="tableToFill">
+
+        </div>
+
+
+        <!--{% for data_row in articles_list %}-->
+            <!--<tr>-->
+                <!--<td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/{{ data_row['ID'] }}">{{ data_row["title"] }}</a>-->
+                <!--</p></td>-->
+                <!--<td><p>{{ data_row["year"] }}</p></td>-->
+                <!--<td><p>-->
+                    <!--{% for author in data_row["Author"] %}-->
+                        <!--{{ author["fore"] }}. {{ author["last"] }},-->
+                    <!--{% endfor %}-->
+                <!--</p></td>-->
+            <!--</tr>-->
+        <!--{% endfor %}-->
     </table>
 </div>
 </body>

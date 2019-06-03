@@ -4,7 +4,7 @@ from datetime import date
 import textmining
 import sessie
 import zoekwoord
-
+import visualiseGraph
 
 class pubMedThread(threading.Thread):
     def __init__(self, termList, sessionName, currentDate, email, searchDepth):
@@ -19,6 +19,8 @@ class pubMedThread(threading.Thread):
         pubmedresults, termsfound = textmining.textming_Start(self.termList, self.searchDept, [])
         sessionobject = self.createSessionObject(pubmedresults, termsfound)
 
+
+        visualiseGraph.createNewGraph(sessionobject)
         #Sophie, hier kan je de database aanroepen
         print()
 

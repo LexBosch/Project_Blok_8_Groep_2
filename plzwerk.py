@@ -191,22 +191,27 @@ def create_table(publication_data, Zoektermen):
     return all_article_dicts
 
 
-@app.route('/graphShown', methods=['POST', 'GET'])
+@app.route('/graphShown', methods=['GET'])
 def graphShown():
-    sessionName = request.form['selectSession']
-    amountShow = request.form['selectAmount']
+
+
+    sessionName = request.args.get('selectSession')
+    amountShow = request.args.get('selectAmount')
     if (sessionName == "-"):
         return render_template("BASE.html", term_list=get_datalist_element_words(),
                                articles_list=[],
                                pagetype="graph",
-                               session_list=visualiseGraph.get_Sessions())
+                               session_list=visualiseGraph.get_Sessions(),
+                               sessionID="")
     else:
         print("SessionID:\t", sessionName)
         print("Amountshow\t", amountShow)
         return render_template("BASE.html", term_list=get_datalist_element_words(),
                                articles_list=[],
                                pagetype="graph",
-                               session_list=visualiseGraph.get_Sessions())
+                               session_list=visualiseGraph.get_Sessions(),
+                               sessionID = sessionName
+                            )
 
 
 @app.route('/graph', methods=['POST', 'GET'])
@@ -217,7 +222,8 @@ def graph():
     return render_template("BASE.html", term_list=get_datalist_element_words(),
                            articles_list=[],
                            pagetype="graph",
-                           session_list=visualiseGraph.get_Sessions())
+                           session_list=visualiseGraph.get_Sessions(),
+                           sessionID="")
     # else:
     #     print(sessionName)
     #     print(amountShow)
@@ -245,7 +251,7 @@ def input_done():
     print("termen:\t" + ", ".join(termList) +
           "\nemail:\t" + email +
           "\nsessienaam:\t" + sessionName)
-    inputTermen.StartPubMedSearch(termList, sessionName, email, amountDatalist)
+    inputTermen.StartPubMedSearch(termList, sessionName, email, amountSearch)
     return render_template("BASE.html",
                            pagetype="input_done")
 

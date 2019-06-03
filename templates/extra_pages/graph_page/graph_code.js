@@ -1,12 +1,11 @@
 /* global Promise, fetch, window, cytoscape, document, tippy, _ */
 filename = fileSelecter = document.getElementById("selectSession");
-alert(filename.toString());
 Promise.all([
     fetch("{{ url_for('static', filename='adFiles/graph_files/cy-style.json') }}")
         .then(function (res) {
             return res.json();
         }),
-    fetch("{{ url_for('static', filename='adFiles/graph_files/data.json') }}")
+    fetch("{{ url_for('static', filename='adFiles/graph_files/data' + sessionID + '.json') }}")
         .then(function (res) {
             return res.json();
         })
@@ -67,15 +66,15 @@ Promise.all([
             {
                 label: 'Edge length',
                 param: 'edgeLengthVal',
-                min: 0,
+                min: 1,
                 max: 200
             },
 
             {
                 label: 'Node spacing',
                 param: 'nodeSpacing',
-                min: 0,
-                max: 100
+                min: 1,
+                max: 50
             }
         ];
 
@@ -211,13 +210,13 @@ Promise.all([
 
             var $links = [
                 {
-                    name: 'Jemoeder',
+                    name: g,
                     url: 'https://downloadmoreram.com'
                 }
             ].map(function (link) {
                 // <input type="submit" name="submit" value="Do Something">
                 //   return h('input', {type: 'submit', name: 'submit', value: 'do something'}, " ")
-                return h('input', {
+                return h('button', {
                     target: '_blank',
                     href: link.url,
                     'class': 'test',
@@ -227,9 +226,8 @@ Promise.all([
                         '    cursor:pointer;' +
                         '    overflow: hidden;' +
                         '    outline:none;',
-                    'type': 'submit',
+                    'button': 'getElementById(\'tableToFill\').innerHTML=Date()',
                     'value': 'View articles',
-                    'href' : 'https://downloadmoreram.com'
                 }, [t(link.name)]);
             });
 
