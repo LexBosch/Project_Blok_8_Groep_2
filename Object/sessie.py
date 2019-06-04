@@ -10,8 +10,6 @@ class Session(object):
     def get_datum(self):
         return str(self.__datum)
 
-
-
     def get_zoekwoorden(self):
         return self.__zoekwoorden
 

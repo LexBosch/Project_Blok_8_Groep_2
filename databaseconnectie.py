@@ -1,6 +1,6 @@
 #author: Sophie Hospel
 #date: 30-05-2019
-#databaseconnectieV1.2 geupdate, alles wat nu aangepast wordt v1.3
+#databaseconnectieV1.3 geupdate, alles wat nu aangepast wordt v1.4
 
 #TO DO:
 #juiste documentatie bij code zetten
@@ -22,11 +22,7 @@ def connectie():
                                       host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
                                       database='owe7_pg1')
 
-        # tabel_session_vullen(cnx)
-        #
-        # sid = 1
-        # sessie = get_session(sid, cnx)
-        # print(sessie)
+
         return cnx
         cnx.close()
 
@@ -44,36 +40,44 @@ def tabel_session_vullen(sessie):
 
 
     cnx = connectie()
-
-    if not (sessie.get_datum()):
-        datum = "curdate()"
-    else:
-        datum = sessie.get_datum()
+    resultaatquery_sessie_tuple = []
+    resultaatquery_sessie = []
+    datum = "curdate()"
 
     query = """INSERT INTO owe7_pg1.session (Title_session, Date_session) VALUES('{0}',{1});""".format(sessie.get_titel(), datum)
     resultaat = """select last_insert_id();"""
     mycursor2 = cnx.cursor()
     mycursor2.execute(query)
     mycursor2.execute(resultaat)
-    resultaatquery_sessie = mycursor2.fetchall()
+    resultaatquery_sessie_tuple += mycursor2.fetchall()
+    for item in resultaatquery_sessie_tuple:
+        value = item[0]
+        resultaatquery_sessie.append(value)
+    print(resultaatquery_sessie)
+
     cnx.commit()
     mycursor2.close()
-    print(resultaatquery_sessie)
     tabel_search_query_vullen(sessie, resultaatquery_sessie, cnx)
 
 
 def tabel_search_query_vullen(sessie, resultaatquery_sessie, cnx):
     ###search query vullen
 
-
-    query = """INSERT INTO owe7_pg1.search_query (Term) VALUES('{0}');""".format(sessie.get_term())
-    resultaat = """select last_insert_id();"""
-    mycursor2 = cnx.cursor()
-    mycursor2.execute(query)
-    resultaatquery_termen = mycursor2.execute(resultaat)
-    cnx.commit()
+    resultaatquery_termen_tuple = []
+    resultaatquery_termen = []
+    for zoekwoord in sessie.get_zoekwoorden():
+        term = str(zoekwoord.get_term())
+        query = """INSERT INTO owe7_pg1.search_query (Term) VALUES('{0}');""".format(term)
+        resultaat = """select last_insert_id();"""
+        mycursor2 = cnx.cursor()
+        mycursor2.execute(query)
+        mycursor2.execute(resultaat)
+        resultaatquery_termen_tuple += mycursor2.fetchall()
+        for item in resultaatquery_termen_tuple:
+            value = item[0]
+            resultaatquery_termen.append(value)
+        cnx.commit()
     mycursor2.close()
-    print(resultaatquery_termen)
 
     tabel_relatie_session_search_query_vullen(sessie, resultaatquery_sessie, resultaatquery_termen, cnx)
     return resultaatquery_termen
@@ -82,16 +86,14 @@ def tabel_search_query_vullen(sessie, resultaatquery_sessie, cnx):
 def tabel_relatie_session_search_query_vullen(sessie, resultaatquery_sessie, resultaatquery_termen, cnx):
     ###relatie tussen sessie en zoekterm vullen
 
-
-    print(resultaatquery_sessie)
-    print(resultaatquery_termen)
-
-    idSession = resultaatquery_sessie
     mycursor2 = cnx.cursor()
-    for item in resultaatquery_termen:
-        query = """insert into owe7_pg1.session_has_search_query (Session_idSession, Search_query_idSearch_query) VALUES({0},{1})""".format(idSession, item)
-        mycursor2.execute(query)
-        cnx.commit()
+    for sessieid in resultaatquery_sessie:
+        idSession = sessieid
+        for item in set(resultaatquery_termen):
+            print(item)
+            query = """insert into owe7_pg1.session_has_search_query (Session_idSession, Search_query_idSearch_query) VALUES({0},{1})""".format(idSession, item)
+            mycursor2.execute(query)
+            cnx.commit()
 
     mycursor2.close()
     tabel_information_article_vullen(sessie, resultaatquery_termen, cnx)
@@ -100,69 +102,87 @@ def tabel_relatie_session_search_query_vullen(sessie, resultaatquery_sessie, res
 def tabel_information_article_vullen(sessie, resultaatquery_termen, cnx):
     ###information article vullen
 
-    query = """INSERT INTO owe7_pg1.information_article (PubMedID, Title, Year_publication) VALUES({0}, '{1}', {2});""".format(sessie.get_pubmed_id(), sessie.get_titel(), sessie.get_pub_datum())
-    resultaat = """select last_insert_id();"""
-    mycursor2 = cnx.cursor()
-    mycursor2.execute(query)
-    mycursor2.execute(resultaat)
-    resultaat_artikelen = mycursor2.fetchall()
-    cnx.commit()
-    mycursor2.close()
-    tabel_relatie_search_query_information_article_vullen(sessie, resultaatquery_termen, resultaat_artikelen, cnx)
-    return resultaat_artikelen
+    resultaatquery_artikelen_tuple = []
+    resultaatquery_artikelen = []
+    for zoekwoord in sessie.get_zoekwoorden():
+        for artikel in zoekwoord.get_artikelen():
+            pubmedid = str(artikel.get_pubmed_id())
+            titel = str(artikel.get_titel())
+            pubdatum = str(artikel.get_pub_datum())
+            query = """INSERT INTO owe7_pg1.information_article (PubMedID, Title, Year_publication) VALUES('{0}', '{1}', '{2}');""".format(pubmedid, titel, pubdatum)
+            resultaat = """select last_insert_id();"""
+            mycursor2 = cnx.cursor()
+            mycursor2.execute(query)
+            mycursor2.execute(resultaat)
+            resultaatquery_artikelen_tuple = mycursor2.fetchall()
+            for item in resultaatquery_artikelen_tuple:
+                value = item[0]
+                resultaatquery_artikelen.append(value)
+            cnx.commit()
+            mycursor2.close()
+    tabel_relatie_search_query_information_article_vullen(sessie, resultaatquery_termen, resultaatquery_artikelen, cnx)
+    return resultaatquery_artikelen
 
 
-def tabel_relatie_search_query_information_article_vullen(sessie, resultaat_termen, resultaat_artikelen, cnx):
+def tabel_relatie_search_query_information_article_vullen(sessie, resultaatquery_termen, resultaatquery_artikelen, cnx):
     ###relatietabel zoekterm en artikel vullen
 
 
-    print(resultaat_termen)
-    print(resultaat_artikelen)
+    print(resultaatquery_termen)
+    print(resultaatquery_artikelen)
 
     mycursor2 = cnx.cursor()
-    for value in resultaat_termen:
-        idSearch_query = value
-        for item in resultaat_artikelen:
+    for termnid in resultaatquery_termen:
+        idSearch_query = termnid
+        for item in set(resultaatquery_artikelen):
             query = """insert into owe7_pg1.information_article_has_search_query (information_article_idinformation_article, search_query_idsearch_query) VALUES({0},{1})""".format(item, idSearch_query)
             mycursor2.execute(query)
             cnx.commit()
 
     mycursor2.close()
-    tabel_author_vullen(sessie, resultaat_artikelen,cnx)
-    return resultaat_termen
+    tabel_author_vullen(sessie, resultaatquery_artikelen,cnx)
+    return resultaatquery_termen
 
 
-def tabel_author_vullen(sessie, resultaat_artikelen, cnx):
+def tabel_author_vullen(sessie, resultaatquery_artikelen, cnx):
     ###author vullen
 
-    if not (sessie.get_insertion()):
-        tussenvoegsel = "NULL"
-    else:
-        tussenvoegsel = sessie.get_insertion()
-        #tussenvoegsel = voorbeeldlijst_author["Insertion"] = "'[0]'".format(voorbeeldlijst_author["Insertion"])
 
-    query = """insert into owe7_pg1.author (Initial, Insertion, Last_name) values ( '{0}', {1}, '{2}');""".format(sessie.get_initial(), tussenvoegsel, sessie.get_last_name())
-    resultaat = """select last_insert_id();"""
-    mycursor1 = cnx.cursor()
-    mycursor1.execute(query)
-    mycursor1.execute(resultaat)
-    resultaat_authors = mycursor1.fetchall()
-    cnx.commit()
-    mycursor1.close()
-    tabel_relatie_article_author_vullen(resultaat_artikelen, resultaat_authors, cnx)
+    resultaatquery_author_tuple = []
+    resultaatquery_author = []
+    for zoekwoord in sessie.get_zoekwoord():
+        for artikel in zoekwoord.get_artikelen():
+            for author in artikel.get_authors():
+                if not (sessie.get_insertion()):
+                    tussenvoegsel = "NULL"
+                else:
+                    tussenvoegsel = author.get_insertion()
+
+                query = """insert into owe7_pg1.author (Initial, Insertion, Last_name) values ( '{0}', {1}, '{2}');""".format(author.get_initial(), tussenvoegsel, author.get_last_name())
+                resultaat = """select last_insert_id();"""
+                mycursor1 = cnx.cursor()
+                mycursor1.execute(query)
+                mycursor1.execute(resultaat)
+                resultaatquery_author_tuple = mycursor1.fetchall()
+                for item in resultaatquery_author_tuple:
+                    value = item[0]
+                    resultaatquery_author.append(value)
+                cnx.commit()
+                mycursor1.close()
+    tabel_relatie_article_author_vullen(resultaatquery_artikelen, resultaatquery_author, cnx)
 
 
-def tabel_relatie_article_author_vullen(resultaat_artikelen, resultaat_authors, cnx):
+def tabel_relatie_article_author_vullen(resultaatquery_artikelen, resultaatquery_author, cnx):
     ###relatietabel tussen artikel en autheur vullen
 
 
-    print(resultaat_artikelen)
-    print(resultaat_authors)
+    print(resultaatquery_artikelen)
+    print(resultaatquery_author)
 
     mycursor2 = cnx.cursor()
-    for value in resultaat_artikelen:
+    for value in resultaatquery_artikelen:
         idAuthor = value
-        for item in resultaat_authors:
+        for item in resultaatquery_author:
             query = """insert into owe7_pg1.author_has_information_article (author_idauthor, information_article_idinformation_article) VALUES({0},{1})""".format(idAuthor,item)
             mycursor2.execute(query)
             cnx.commit()
@@ -186,9 +206,6 @@ def get_session(sid, cnx):
         datum = regel[2]
         session = Session(titel, datum, zoekwoorden)
         sessie.append(session)
-        #sessie.append(session.get_titel())
-        #sessie.append(session.get_datum())
-        #sessie.append(zoekwoorden)
 
     return sessie
 
@@ -208,13 +225,10 @@ def get_zoekwoorden(sid, cnx):
         term = regel[1]
         zoekwoord = Zoekwoord(term, artikelen)
         zoekwoorden.append(zoekwoord)
-        #zoekwoorden.append(zoekwoord.get_term())
-        #zoekwoorden.append(artikelen)
 
     return zoekwoorden
 
 def get_articelen(resultaat_termen, cnx):
-
     #deze search_id is hetzelfde als het opgehaalde getal bij tabel search query vullen
 
     for item in resultaat_termen:
@@ -233,10 +247,6 @@ def get_articelen(resultaat_termen, cnx):
             publicatiedatum = regel[3]
             artikel = Artikel(pubmedid, titel, publicatiedatum, authors)
             artikelen.append(artikel)
-            #artikelen.append(artikel.get_pubmed_id())
-            #artikelen.append(artikel.get_titel())
-            #artikelen.append(artikel.get_pub_datum())
-            #artikelen.append(authors)
 
     return resultaat_termen
 
@@ -265,9 +275,6 @@ def get_autheurs(resultaat_artikelen, cnx):
         last_name = regel[3]
         author = Author(initial, insertion, last_name)
         authors.append(author)
-        #authors.append(author.get_initial())
-        #authors.append(author.get_insertion())
-        #authors.append(author.get_last_name())
 
     return authors
 
@@ -285,12 +292,44 @@ def databaseophalen(id, resultaat_termen, resultaat_artikelen):
     return sessie
 
 
-def sessiesophalen(id):
+def sessiesophalen(lijstid):
     cnx = connectie()
-    sessie = get_session(id, cnx)
-    print(str(sessie))
+    mycursor = cnx.cursor()
 
+    resultaatsessieID = []
+    resultaatsessietitel = []
+    resultaatsessiedatum = []
 
-    return sessie
+    for itemid in lijstid:
+        resultaatsessieID_tuple = []
+        queryid = """select idSession from owe7_pg1.session where idSession = {0};""".format(itemid)
+        mycursor.execute(queryid)
+        resultaatsessieID_tuple = mycursor.fetchall()
+        for item in resultaatsessieID_tuple:
+            value = item[0]
+            resultaatsessieID.append(value)
+
+        resultaatsessietitel_tuple = []
+        querytitel = """select Title_session from owe7_pg1.session where idSession = {0};""".format(itemid)
+        mycursor.execute(querytitel)
+        resultaatsessietitel_tuple = mycursor.fetchall()
+        for item in resultaatsessietitel_tuple:
+            value = item[0]
+            resultaatsessietitel.append(value)
+
+        resultaatsessiedatum_tuple = []
+        querydatum = """select Date_session from owe7_pg1.session where idSession = {0};""".format(itemid)
+        mycursor.execute(querydatum)
+        resultaatsessiedatum_tuple = mycursor.fetchall()
+        for item in resultaatsessiedatum_tuple:
+            value = item[0]
+            resultaatsessiedatum.append(value)
+        cnx.commit()
+
+    print("IDs: ", resultaatsessieID)
+    print("Titels: ", resultaatsessietitel)
+    print("Datums: ", resultaatsessiedatum)
+
+    return resultaatsessieID, resultaatsessietitel, resultaatsessiedatum
 
 
