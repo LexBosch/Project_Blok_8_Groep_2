@@ -1,5 +1,6 @@
 import json
 
+
 def showPage():
     print("ter")
 
@@ -24,9 +25,6 @@ def createNewGraph(SessionObject):
 
     newJson = {}
 
-
-
-
     fo = open("static/adFiles/graph_files/data{0}.json".format(SessionObject.get_titel()), "w")
     fo.write(json.dumps(jsonFile))
     fo.close()
@@ -44,7 +42,6 @@ def terms(termObjList):
             articleList = []
             for article in termObj.get_artikelen():
                 if article in otherTermOjcect.get_artikelen():
-                    connScore += 0.05
                     articleList.append({"titel": article.get_titel(),
                                         "pubdate": article.get_pub_datum(),
                                         "pmId": article.get_pubmed_id(),
@@ -53,22 +50,23 @@ def terms(termObjList):
             for article in articleList:
                 if article not in newArticleList:
                     newArticleList.append(article)
+                    connScore += 0.05
             edgeName = str(termID) + "00100" + str(termObjList.index(otherTermOjcect) + 1)
-            if(connScore > 0):
-                jsonFile.append(createArticleEdge(termID, termObjList.index(otherTermOjcect) + 1, connScore, edgeName, newArticleList))
-
+            if (connScore > 0):
+                jsonFile.append(createArticleEdge(termID, termObjList.index(otherTermOjcect) + 1, connScore, edgeName,
+                                                  newArticleList))
 
     return jsonFile
+
 
 def createAuthorList(article):
     authorList = []
     for author in article.get_authors():
         authorList.append({
-            "fore" : author.get_initial(),
-            "last" : author.get_last_name()
+            "fore": author.get_initial(),
+            "last": author.get_last_name()
         })
     return authorList
-
 
 
 def createTermNode(termObj, termID):

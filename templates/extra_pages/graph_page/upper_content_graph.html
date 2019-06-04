@@ -8,7 +8,7 @@
             var pmDate = tableData[article]["pubdate"];
             var authorString = "";
             for (singleAuthor in tableData[article]["authors"]) {
-                authorString += tableData[article]["authors"][singleAuthor]["fore"] + '. ' + tableData[article]["authors"][singleAuthor]["last"] + ' '
+                authorString += tableData[article]["authors"][singleAuthor]["fore"] + '. ' + tableData[article]["authors"][singleAuthor]["last"] + ', '
             }
             newRow = '<tr>' +
                 '<td><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/' + pmID + '">' + titel + '</a></p></td>' +

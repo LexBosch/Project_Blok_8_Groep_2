@@ -14,13 +14,7 @@ app = Flask(__name__)
 mail = "lexbosch@live.nl"
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    amount_list = 3
-    return render_template("BASE.html", term_list=get_datalist_element_words(),
-                           amount_input=amount_list,
-                           articles_list=[],
-                           pagetype="main")
+
 
 
 def get_datalist_element_words():
@@ -223,7 +217,7 @@ def graph():
     #                            session_list=visualiseGraph.get_Sessions())
 
 
-@app.route('/input', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def input():
     amount_list = 3
     return render_template("BASE.html",
