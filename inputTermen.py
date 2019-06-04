@@ -41,9 +41,11 @@ class pubMedThread(threading.Thread):
         for singeleterm in terms:
             articleList = []
             for singleArticle in found_articles:
-                if singeleterm in singleArticle["terms"]:
-                    articleList.append(singleArticle["articleObject"])
-            termList.append(zoekwoord.Zoekwoord(singeleterm, articleList))
+
+                for meshterm in singeleterm["To"]:
+                    if meshterm in singleArticle["terms"]:
+                        articleList.append(singleArticle["articleObject"])
+            termList.append(zoekwoord.Zoekwoord(singeleterm["From"], articleList, singeleterm["To"]))
         return termList
 
 

@@ -5,6 +5,7 @@ from collections import Counter
 from itertools import combinations
 from Bio import Entrez
 from Object import artikel, author
+import re
 
 mail = "lexbosch@live.nl"
 
@@ -34,11 +35,13 @@ def zoekArtikelen(zoekQueryLijst):
     :return: articleObject: [lijst van artikelen]
     """
     PubmedResult = []
+    terms = []
     Entrez.email = mail
     articleObject = []
     for item in zoekQueryLijst:
         handle_first = Entrez.esearch(db="pubmed", term=item, retmax=100, retmode="xml")
         zoekResultaat = Entrez.read(handle_first)
+        terms += getMeshTerms(zoekResultaat, terms)
         handle_first.close()
         pubmedIDLijst = zoekResultaat["IdList"]
         try:
@@ -48,7 +51,35 @@ def zoekArtikelen(zoekQueryLijst):
             #No articles found
             pass
             print("errored")
-    return PubmedResult, articleObject
+    return PubmedResult, articleObject, terms
+
+
+def getMeshTerms(meshTrack, foundTerms):
+    MeshTermList = []
+    for searchTerm in meshTrack["TranslationSet"]:
+        if not searchTerm["From"] in turnToList(foundTerms):
+            newMashTerms = {"From": searchTerm["From"],
+                            "To": []
+                            }
+            listWithNewTerms = searchTerm["To"].split(" OR ")
+            for singleNewTerm in listWithNewTerms:
+                if "AND" not in singleNewTerm:
+                    result = re.search('"(.*)"', singleNewTerm)
+                    resultingTerm = result.group(1)
+                    if not resultingTerm in newMashTerms["To"]:
+                        newMashTerms["To"].append(resultingTerm)
+            MeshTermList.append(newMashTerms)
+    return MeshTermList
+
+
+def turnToList(ListWithDicts):
+    newlist = []
+    for dict in ListWithDicts:
+        newlist.append(dict["From"])
+    return newlist
+
+
+
 
 
 def zoekInformatie(pubmedIDLijst):
@@ -246,10 +277,11 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
     :return: PubmedIDLijst: [lijst van Strings]
     :return: oldTermList: [lijst van Strings]
     """
-    oldTermlist += ZoektermenLijst
+   # oldTermlist += ZoektermenLijst
     aantal_zoeken = aantal_zoeken - 1
     zoekQueryLijst = query_maken(ZoektermenLijst)
-    results, pubmedIDLijst = zoekArtikelen(zoekQueryLijst)
+    results, pubmedIDLijst, termsWithMesh = zoekArtikelen(zoekQueryLijst)
+    oldTermlist += termsWithMesh
     if aantal_zoeken > 0:
         term_list = keywordsLijst(results, oldTermlist)
         # print(term_list)
