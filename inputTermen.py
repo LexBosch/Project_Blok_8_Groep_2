@@ -5,6 +5,7 @@ import textmining
 import sessie
 import zoekwoord
 import visualiseGraph
+import databaseconnectie
 
 
 class pubMedThread(threading.Thread):
@@ -23,7 +24,9 @@ class pubMedThread(threading.Thread):
 
         visualiseGraph.createNewGraph(sessionobject)
         #Sophie, hier kan je de database aanroepen
-
+        #databaseconnectie.databasevullen(sessionobject)
+        lijstid = [1,2,3,4]
+        databaseconnectie.sessiesophalen(lijstid)
         print()
 
 
