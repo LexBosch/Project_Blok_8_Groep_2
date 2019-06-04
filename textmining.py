@@ -1,14 +1,20 @@
+#Auteur: Carleen
+#webapplicatie textmingV1.2
+
 from collections import Counter
 from itertools import combinations
-from Bio import Entrez, Medline
-from artikel import Artikel
-import urllib.request
-import artikel
-import author
+from Bio import Entrez
+from Object import artikel, author
+import re
 
 mail = "lexbosch@live.nl"
 
 def query_maken(Zoektermenlijst):
+    """Query maken
+    Deze methode zet de termen die zijn ingevuld op de website in een lijst.
+    input: Zoektermenlijst: (String)
+    return zoekQueryLijst: [Lijst van Strings]
+    """
     querystring = ""
     zoekQueryLijst = []
     zoekcombinaties = combinations(Zoektermenlijst, 2)
@@ -21,12 +27,21 @@ def query_maken(Zoektermenlijst):
 
 
 def zoekArtikelen(zoekQueryLijst):
+    """zoekArtikelen
+    Deze functie zoekt met de zoektermen die in de zoekQueryLijst staan naar artikelen op pubmed.
+    De ID's van de gevonden artikelen worden in PubmedIDLijst gezet.
+    :param zoekQueryLijst: [Lijst van Strings]
+    :return: PubmedResult: [Lijst van Pubmedoutput]
+    :return: articleObject: [lijst van artikelen]
+    """
     PubmedResult = []
+    terms = []
     Entrez.email = mail
     articleObject = []
     for item in zoekQueryLijst:
         handle_first = Entrez.esearch(db="pubmed", term=item, retmax=100, retmode="xml")
         zoekResultaat = Entrez.read(handle_first)
+        terms += getMeshTerms(zoekResultaat, terms)
         handle_first.close()
         pubmedIDLijst = zoekResultaat["IdList"]
         try:
@@ -36,10 +51,43 @@ def zoekArtikelen(zoekQueryLijst):
             #No articles found
             pass
             print("errored")
-    return PubmedResult, articleObject
+    return PubmedResult, articleObject, terms
+
+
+def getMeshTerms(meshTrack, foundTerms):
+    MeshTermList = []
+    for searchTerm in meshTrack["TranslationSet"]:
+        if not searchTerm["From"] in turnToList(foundTerms):
+            newMashTerms = {"From": searchTerm["From"],
+                            "To": []
+                            }
+            listWithNewTerms = searchTerm["To"].split(" OR ")
+            for singleNewTerm in listWithNewTerms:
+                if "AND" not in singleNewTerm:
+                    result = re.search('"(.*)"', singleNewTerm)
+                    resultingTerm = result.group(1)
+                    if not resultingTerm in newMashTerms["To"]:
+                        newMashTerms["To"].append(resultingTerm)
+            MeshTermList.append(newMashTerms)
+    return MeshTermList
+
+
+def turnToList(ListWithDicts):
+    newlist = []
+    for dict in ListWithDicts:
+        newlist.append(dict["From"])
+    return newlist
+
+
+
 
 
 def zoekInformatie(pubmedIDLijst):
+    """zoekInformatie
+    Deze functie haalt per Id de informatie van de artikelen op.
+    :param pubmedIDLijst: [lijst van Strings]
+    :return: results: pubmedoutput
+    """
     ids = ', '.join(pubmedIDLijst)
     handle_seccond = Entrez.efetch(db="pubmed", id=ids, rettype="medline", retmode="xml")
     try:
@@ -51,7 +99,11 @@ def zoekInformatie(pubmedIDLijst):
 
 
 def artikelLijstMaken(results):
-    # todo functie uitwerken
+    """artikelLijstMaken
+    Deze functie haalt de informatie van elk artikel op en zet dit in een lijst.
+    :param results: pubmedoutput
+    :return: all_article_dicts [lijst van Stringelementen]
+    """
     term_list = {}
     all_article_dicts = []
     for paper in results:
@@ -104,6 +156,12 @@ def artikelLijstMaken(results):
 
 
 def keywordsLijst(results, oldTermlist):
+    """keywordsLijst
+    Deze functie maakt een dictionary aan met keywords en het aantal keer hoe vaak ze voorkomen.
+    :param results: [lijst van strings]
+    :param oldTermlist: [lijst van String]
+    :return: term_list: {term : Count}
+    """
     term_list = {}
     for paper in results:
         try:
@@ -123,6 +181,11 @@ def keywordsLijst(results, oldTermlist):
 
 
 def filterterm_list(term_list):
+    """filterterm_list
+    Deze functie pakt de termen die het vaakst voorkomen en zet deze in een lijst.
+    :param term_list: {term : count}
+    :return: hoogsteKeyLijst: [lijst van Strings]
+    """
     hoogsteKeysLijst = []
     info = Counter(term_list)
     hoogste = info.most_common(5)
@@ -132,6 +195,11 @@ def filterterm_list(term_list):
 
 
 def createArticleObject(ArticleList):
+    """createArticleObject
+    Deze functie haalt informatie uit de artikelen en zet deze in een dictionary en vervolgens in een lijst.
+    :param ArticleList: pubmedoutput
+    :return: newArticleList: [{lijst van dictionaries}]
+    """
     newArticleList = []
     for singleArticle in ArticleList:
         articleAndTermsDict = {}
@@ -180,6 +248,11 @@ def createArticleObject(ArticleList):
 
 
 def createAuthorObject(AuthorList):
+    """createAuthorObject
+    Deze functie haalt de initialen en achternaam uit een lijst.
+    :param AuthorList: pubmedoutput
+    :return: newAuthorList : [lijst van String]
+    """
     newAuthorList = []
     for singleAuthor in AuthorList:
         try:
@@ -195,19 +268,20 @@ def createAuthorObject(AuthorList):
 
 
 def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
-    oldTermlist += ZoektermenLijst
+    """textmining_Start
+    Functie die verschillende andere functies aanroept.
+    Deze functie zorgt ook voor de uiteindelijke resultaten.
+    :param ZoektermenLijst: [lijst van Strings]
+    :param aantal_zoeken: (Int)
+    :param oldTermlist: [lijst van Strings]
+    :return: PubmedIDLijst: [lijst van Strings]
+    :return: oldTermList: [lijst van Strings]
+    """
+   # oldTermlist += ZoektermenLijst
     aantal_zoeken = aantal_zoeken - 1
     zoekQueryLijst = query_maken(ZoektermenLijst)
-    # print(zoekQueryLijst)
-    results, pubmedIDLijst = zoekArtikelen(zoekQueryLijst)
-    # print(pubmedIDLijst)
-  #  results, ArticleTermList = zoekInformatie(pubmedIDLijst)
-    # print(results)
-
-   # all_article_dicts = artikelLijstMaken(results)
-   # objectmaken(all_article_dicts)
-
-    # artikelInfoDict =
+    results, pubmedIDLijst, termsWithMesh = zoekArtikelen(zoekQueryLijst)
+    oldTermlist += termsWithMesh
     if aantal_zoeken > 0:
         term_list = keywordsLijst(results, oldTermlist)
         # print(term_list)
@@ -216,6 +290,4 @@ def textming_Start(ZoektermenLijst, aantal_zoeken, oldTermlist):
         print(hoogsteKeysLijst)
         NewpubmedIDLijst, oldtermlist = textming_Start(hoogsteKeysLijst, aantal_zoeken, oldTermlist)
         return (pubmedIDLijst + NewpubmedIDLijst), oldtermlist
-    # else:
-    #     return artikelInfoDict
     return pubmedIDLijst, oldTermlist

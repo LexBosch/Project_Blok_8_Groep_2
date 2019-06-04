@@ -178,17 +178,7 @@ def create_table(publication_data, Zoektermen):
     for key in term_list:
         if term_list[key] >= 5:
             new_data_term_list[key] = term_list[key]
-    try:
-        lijst, hoogste = textmining.filterKeywords(new_data_term_list)
-        zoekstring = textmining.combineerTermen(Zoektermen, hoogste)
-        record = textmining.additional_Search1(zoekstring)
-        records = textmining.esearch2(record)
-        titellijst = textmining.getTitle(records)
 
-    except urllib.error.HTTPError as er:
-        print(er)
-    textmining.formatteren(titellijst)
-    return all_article_dicts
 
 
 @app.route('/graphShown', methods=['GET'])

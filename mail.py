@@ -24,7 +24,7 @@ def createMail(self):
     :param mailFromAdress: The adress used to send an e-mail
     :return: message is a String containen the e-mail message
     """
-    body = """Your job "{0}" at GourdsGroup has finished processing.\nHead over to 'http://bittergourd.info/graph' to see the result""".format(
+    body = """Your job "{0}" at GourdsGroup has finished processing.\nHead over to 'http://bittergourd.info/graphShown?selectSession={0}&selectAmount=5' to see the result""".format(
         self.sessionName)
     subject = "Your job {0} is done".format(self.sessionName)
 

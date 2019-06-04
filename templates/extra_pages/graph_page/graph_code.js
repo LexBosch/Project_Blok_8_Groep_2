@@ -144,6 +144,7 @@ Promise.all([
             $input.addEventListener('change', update);
         }
 
+
         function makeButton(opts) {
             var $button = h('button', {'class': 'btn btn-default'}, [opts.label]);
 
@@ -206,12 +207,15 @@ Promise.all([
 
 
         cy.edges().forEach(function (n) {
-            var g = n.data('name');
 
+            var g = n.data('name');
+            var articleData = n.data('articles');
             var $links = [
                 {
                     name: g,
-                    url: 'https://downloadmoreram.com'
+                    url: 'https://downloadmoreram.com',
+                    dataFromArticle: articleData
+
                 }
             ].map(function (link) {
                 // <input type="submit" name="submit" value="Do Something">
@@ -227,9 +231,10 @@ Promise.all([
                         '    overflow: hidden;' +
                         '    outline:none;',
                     'button': 'getElementById(\'tableToFill\').innerHTML=Date()',
-                    'value': 'View articles',
-                }, [t(link.name)]);
+                    'onclick': 'filltable('+JSON.stringify(link.dataFromArticle)+')',
+                }, [t('Laat artikelen zien')]);
             });
+
 
             var tippy = makeTippy(n, h('div', {}, $links));
 
@@ -239,37 +244,6 @@ Promise.all([
                 tippy.show();
 
                 cy.edges().not(n).forEach(hideTippy);
-            });
-        });
-
-
-        cy.nodes().forEach(function (n) {
-            var g = n.data('name');
-
-            var $links = [
-                {
-                    name: 'neen',
-                    url: 'https://downloadmoreram.com'
-                },
-                {
-                    name: 'UniProt search',
-                    url: 'http://www.uniprot.org/uniprot/?query=' + g + '&fil=organism%3A%22Homo+sapiens+%28Human%29+%5B9606%5D%22&sort=score'
-                },
-                {
-                    name: 'GeneMANIA',
-                    url: 'http://genemania.org/search/human/' + g
-                }
-            ].map(function (link) {
-                return h('a', {target: '_blank', href: link.url, 'class': 'tip-link'}, [t(link.name)]);
-            });
-            var tippy = makeTippy(n, h('div', {}, $links));
-
-            n.data('tippy', tippy);
-
-            n.on('click', function (e) {
-                tippy.show();
-
-                cy.nodes().not(n).forEach(hideTippy);
             });
         });
 

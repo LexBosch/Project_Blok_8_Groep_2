@@ -1,11 +1,11 @@
 import threading
-import time
 from datetime import date
 import textmining
-import sessie
-import zoekwoord
+from Object import sessie, zoekwoord
 import visualiseGraph
 import databaseconnectie
+import mail
+
 
 
 class pubMedThread(threading.Thread):
@@ -24,9 +24,14 @@ class pubMedThread(threading.Thread):
 
         visualiseGraph.createNewGraph(sessionobject)
         #Sophie, hier kan je de database aanroepen
+
         #databaseconnectie.databasevullen(sessionobject)
         lijstid = [1,2,3,4]
         databaseconnectie.sessiesophalen(lijstid)
+
+        #mail.Mail(self.email, self.sessionName)
+
+
         print()
 
 
@@ -44,9 +49,11 @@ class pubMedThread(threading.Thread):
         for singeleterm in terms:
             articleList = []
             for singleArticle in found_articles:
-                if singeleterm in singleArticle["terms"]:
-                    articleList.append(singleArticle["articleObject"])
-            termList.append(zoekwoord.Zoekwoord(singeleterm, articleList))
+
+                for meshterm in singeleterm["To"]:
+                    if meshterm in singleArticle["terms"]:
+                        articleList.append(singleArticle["articleObject"])
+            termList.append(zoekwoord.Zoekwoord(singeleterm["From"], articleList, singeleterm["To"]))
         return termList
 
 

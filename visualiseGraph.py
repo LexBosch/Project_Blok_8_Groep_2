@@ -1,8 +1,3 @@
-import databaseconnectie
-import sessie
-import zoekwoord
-import artikel
-import author
 import json
 
 def showPage():
@@ -26,6 +21,8 @@ def get_Sessions():
 
 def createNewGraph(SessionObject):
     jsonFile = terms(SessionObject.get_zoekwoorden())
+
+    newJson = {}
 
 
 
@@ -52,9 +49,13 @@ def terms(termObjList):
                                         "pubdate": article.get_pub_datum(),
                                         "pmId": article.get_pubmed_id(),
                                         "authors": createAuthorList(article)})
+            newArticleList = []
+            for article in articleList:
+                if article not in newArticleList:
+                    newArticleList.append(article)
             edgeName = str(termID) + "00100" + str(termObjList.index(otherTermOjcect) + 1)
-
-            jsonFile.append(createArticleEdge(termID, termObjList.index(otherTermOjcect) + 1, connScore, edgeName, articleList))
+            if(connScore > 0):
+                jsonFile.append(createArticleEdge(termID, termObjList.index(otherTermOjcect) + 1, connScore, edgeName, newArticleList))
 
 
     return jsonFile
@@ -120,6 +121,6 @@ def createArticleEdge(termId1, termId2, score, linkId, articleList):
     articlEdge["data"]["target"] = termId2
     articlEdge["data"]["weight"] = score
     articlEdge["data"]["id"] = linkId
-    articlEdge["articles"] = articleList
+    articlEdge["data"]["articles"] = articleList
 
     return articlEdge
