@@ -22,6 +22,8 @@ def get_Sessions():
 def createNewGraph(SessionObject):
     jsonFile = terms(SessionObject.get_zoekwoorden())
 
+    newJson = {}
+
 
 
 
@@ -47,9 +49,13 @@ def terms(termObjList):
                                         "pubdate": article.get_pub_datum(),
                                         "pmId": article.get_pubmed_id(),
                                         "authors": createAuthorList(article)})
+            newArticleList = []
+            for article in articleList:
+                if article not in newArticleList:
+                    newArticleList.append(article)
             edgeName = str(termID) + "00100" + str(termObjList.index(otherTermOjcect) + 1)
             if(connScore > 0):
-                jsonFile.append(createArticleEdge(termID, termObjList.index(otherTermOjcect) + 1, connScore, edgeName, articleList))
+                jsonFile.append(createArticleEdge(termID, termObjList.index(otherTermOjcect) + 1, connScore, edgeName, newArticleList))
 
 
     return jsonFile
