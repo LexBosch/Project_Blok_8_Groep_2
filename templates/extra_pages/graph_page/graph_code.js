@@ -232,7 +232,7 @@ Promise.all([
                         '    outline:none;',
                     'button': 'getElementById(\'tableToFill\').innerHTML=Date()',
                     'onclick': 'filltable('+JSON.stringify(link.dataFromArticle)+')',
-                }, [t('Laat artikelen zien')]);
+                }, [t('Display articles')]);
             });
 
 

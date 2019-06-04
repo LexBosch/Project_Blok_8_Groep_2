@@ -24,7 +24,6 @@
 </script>
 
 
-< class="content">
 <!-- input+submit+text -->
 <div>
     <div class="left-top" style="float:left;width:100%;">
@@ -34,36 +33,23 @@
 
                 <table>
                     <tr>
-                        <td><p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
+                        <td><p style="margin-bottom: 2px;">What session<br>to display</p>
                             <select id="selectSession" name="selectSession">
                                 <option value=""> -</option>
 
 
                                 {% for session in session_list %}
-                                <option value={{ session[
-                                "sesId"] }}>{{ session["sessionName"] }}</option>
+                                <option value={{ session["sesId"] }}>{{ session["sessionName"] }}</option>
                                 {% endfor %}
 
                             </select></td>
-                        <td style="float:right;text-align: right;">
-                            <p style="margin-bottom: 2px;">Aantal artikelen<br>weergeven</p>
-                            <select name="selectAmount">
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="all">All</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="submit" style="margin-top:6px;margin-bottom: 6px;" class="button_fancy">
+                        <td style="vertical-align: bottom">
+                            <input type="submit" style="margin-top:6px;margin-bottom: 6px;" class="button_fancy" value="Visualize">
                         </td>
                     </tr>
                 </table>
             </form>
         </div>
-
 
         <!-- Input area for serach terms -->
         <div>
