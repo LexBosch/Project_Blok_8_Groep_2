@@ -27,12 +27,13 @@ class pubMedThread(threading.Thread):
 
         #databaseconnectie.databasevullen(sessionobject)
         lijstid = [1,2,3,4]
-        databaseconnectie.sessiesophalen(lijstid)
+        #databaseconnectie.sessiesophalen(lijstid)
 
-        #mail.Mail(self.email, self.sessionName)
+        if not self.email == "":
+            mail.Mail(self.email, self.sessionName)
 
 
-        print()
+        print("-"*50)
 
 
 

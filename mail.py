@@ -52,3 +52,4 @@ def sendMail(self):
 
     server.sendmail(self.scriptEmail, self.mailToadress, self.message)
     server.quit()
+
