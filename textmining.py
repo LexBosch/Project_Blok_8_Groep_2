@@ -49,6 +49,7 @@ def zoekArtikelen(zoekQueryLijst):
             articleObject += (createArticleObject(PubmedResult))
         except UnboundLocalError as ule:
             #No articles found
+            ule.args
             pass
             print("errored")
     return PubmedResult, articleObject, terms
@@ -92,7 +93,8 @@ def zoekInformatie(pubmedIDLijst):
     handle_seccond = Entrez.efetch(db="pubmed", id=ids, rettype="medline", retmode="xml")
     try:
         results = Entrez.read(handle_seccond)["PubmedArticle"]
-    except RuntimeError:
+    except RuntimeError as RT:
+        RT.args
         # todo: exceptionhandeling
         print()
     return results
@@ -139,12 +141,14 @@ def artikelLijstMaken(results):
                     try:
                         temp_name_dict = {"fore": author["Initials"], "last": author["LastName"]}
                         name_dict.append(temp_name_dict)
-                    except KeyError:
+                    except KeyError as KE:
+                        KE.args
                         temp_name_dict = {}
             except KeyError:
                 name_dict.append({"fore": "No authors found", "last": ""})
                 article_dict["Author"] = name_dict
-            except TypeError:
+            except TypeError as TE:
+                TE.args
                 print()
             if article_dict:
                 all_article_dicts.append(article_dict)
@@ -225,7 +229,8 @@ def createArticleObject(ArticleList):
 
             except IndexError:
                 print("dateError")
-            except TypeError:
+            except TypeError as TE:
+                TE.args
                 try:
                     articleAndTermsDict["articleObject"] = (artikel.Artikel(
                         singleArticle["MedlineCitation"]["PMID"],
