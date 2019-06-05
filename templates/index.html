@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='adFiles/index.css') }}">
+<style>
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Lato", sans-serif
+    }
+
+    .topBar, h1, button {
+        font-family: "Montserrat", sans-serif
+    }
+
+    .fa-anchor, .fa-coffee {
+        font-size: 200px
+    }
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="topSection">
+    <div class="topBar redButton card leftAlign large">
+        <a class="barItem button hideMedium hideLarge right paddingLarge hoverWhite large redButton"
+           href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
+                class="fa fa-bars"></i></a>
+        <a href="#" class="barItem button paddingLarge white">Home</a>
+        <a href="#" class="barItem button hideSmall paddingLarge hoverWhite">add</a>
+        <a href="#" class="barItem button hideSmall paddingLarge hoverWhite">about the project</a>
+        <a href="#" class="barItem button hideSmall paddingLarge hoverWhite">contact</a>
+    </div>
+
+    <!-- Navbar on small screens -->
+    <div id="navDemo" class="barBlock white hide hideLarge hideMedium large">
+        <a href="#" class="barItem button paddingLarge">home</a>
+        <a href="#" class="barItem button paddingLarge">add</a>
+        <a href="#" class="barItem button paddingLarge">about the project</a>
+        <a href="#" class="barItem button paddingLarge">contact</a>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="container redButton center" style="padding:70px 16px">
+    <h1 class="margin jumbo">Gourd pourg</h1>
+</header>
+
+<!-- First Grid -->
+<div class="rowPadding padding64 container">
+  {{upperBody | safe}}
+</div>
+
+
+<!-- Second Grid -->
+<div class="rowPadding whiteGrey padding64 container">
+    <div class="content">
+        <div class="twoThird">
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Used to toggle the menu on small screens when clicking on the menu button
+    function myFunction() {
+        var x = document.getElementById("navDemo");
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+</script>
+
+</body>
+</html>

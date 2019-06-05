@@ -1,0 +1,13 @@
+<body>
+{% include "base_pages/nav_bar.html" %}
+<div class="rowPadding padding64 container">
+    {% include "extra_pages/"+ pagetype +"_page/upper_content_" + pagetype + ".html" %}
+</div>
+<div class="rowPadding whiteGrey padding64 container">
+    <div class="content">
+        <div class="twoThird">
+            {% include "extra_pages/" + pagetype + "_page/lower_content_" + pagetype + ".html" %}
+        </div>
+    </div>
+</div>
+</body>
