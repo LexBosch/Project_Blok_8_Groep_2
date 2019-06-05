@@ -97,7 +97,6 @@ def zoekInformatie(pubmedIDLijst):
     return results
 
 
-<<<<<<< HEAD
 def artikelLijstMaken(results):
     """artikelLijstMaken
     Deze functie haalt de informatie van elk artikel op en zet dit in een lijst.
