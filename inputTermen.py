@@ -23,17 +23,20 @@ class pubMedThread(threading.Thread):
 
 
         visualiseGraph.createNewGraph(sessionobject)
-        #Sophie, hier kan je de database aanroepen
+<<<<<<< HEAD
 
-        #databaseconnectie.databasevullen(sessionobject)
+
+        databaseconnectie.databasevullen(sessionobject)
         lijstid = [1,2,3,4]
-        #databaseconnectie.sessiesophalen(lijstid)
+       # databaseconnectie.sessiesophalen(lijstid)
 
-        if not self.email == "":
-            mail.Mail(self.email, self.sessionName)
-
-
-        print("-"*50)
+=======
+        #Sophie, hier kan je de database aanroepen
+        databaseconnectie.databasevullen(sessionobject)
+        databaseconnectie.sessiesophalen()
+>>>>>>> databaseconnectieV1.5
+        #mail.Mail(self.email, self.sessionName)
+        print()
 
 
 

@@ -49,7 +49,7 @@ def zoekArtikelen(zoekQueryLijst):
             PubmedResult = zoekInformatie(pubmedIDLijst)
             articleObject += (createArticleObject(PubmedResult))
         except UnboundLocalError as ule:
-            # No articles found
+
             pass
             print("errored")
     return PubmedResult, articleObject, terms
@@ -90,10 +90,69 @@ def zoekInformatie(pubmedIDLijst):
     handle_seccond = Entrez.efetch(db="pubmed", id=ids, rettype="medline", retmode="xml")
     try:
         results = Entrez.read(handle_seccond)["PubmedArticle"]
-    except RuntimeError:
+    except RuntimeError as RT:
+        RT.args
         # todo: exceptionhandeling
         print()
     return results
+
+
+def artikelLijstMaken(results):
+    """artikelLijstMaken
+    Deze functie haalt de informatie van elk artikel op en zet dit in een lijst.
+    :param results: pubmedoutput
+    :return: all_article_dicts [lijst van Stringelementen]
+    """
+    term_list = {}
+    all_article_dicts = []
+    for paper in results:
+        if paper:
+            article_dict = {}
+            try:
+                # PubmedIDs
+                article_dict["ID"] = paper["MedlineCitation"]["PMID"]
+                # Artikel data (Deze mist nogal vaak)
+                article_dict["year"] = paper["MedlineCitation"]["DateCompleted"]["Year"]
+                # Titel van het artikel
+                article_dict["title"] = paper["MedlineCitation"]["Article"]["ArticleTitle"]
+                # Authors van het artikel
+                name_dict = []
+                for author in paper["MedlineCitation"]["Article"]["AuthorList"]:
+                    temp_name_dict = {"fore": author["Initials"], "last": author["LastName"]}
+                    name_dict.append(temp_name_dict)
+                article_dict["Author"] = name_dict
+                # temp
+
+                # endtemp
+            except KeyError:
+                # PubmedIDs
+                article_dict["ID"] = paper["MedlineCitation"]["PMID"]
+                # Artikel data (Deze mist nogal vaak)
+                article_dict["year"] = "Onbekend"
+                # Titel van het artikel
+                article_dict["title"] = paper["MedlineCitation"]["Article"]["ArticleTitle"]
+                # Authors van het artikel
+                name_dict = []
+            try:
+                for author in paper["MedlineCitation"]["Article"]["AuthorList"]:
+                    try:
+                        temp_name_dict = {"fore": author["Initials"], "last": author["LastName"]}
+                        name_dict.append(temp_name_dict)
+                    except KeyError as KE:
+
+                        temp_name_dict = {}
+            except KeyError:
+                name_dict.append({"fore": "No authors found", "last": ""})
+                article_dict["Author"] = name_dict
+            except TypeError as TE:
+
+                print()
+            if article_dict:
+                all_article_dicts.append(article_dict)
+    return all_article_dicts
+
+
+
 
 
 def keywordsLijst(results, oldTermlist):
@@ -166,7 +225,8 @@ def createArticleObject(ArticleList):
 
             except IndexError:
                 print("dateError")
-            except TypeError:
+            except TypeError as TE:
+                TE.args
                 try:
                     articleAndTermsDict["articleObject"] = (artikel.Artikel(
                         singleArticle["MedlineCitation"]["PMID"],
