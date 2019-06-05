@@ -5,6 +5,7 @@ from Object import sessie, zoekwoord
 import visualiseGraph
 import databaseconnectie
 import mail
+import mysql
 
 
 
@@ -20,23 +21,14 @@ class pubMedThread(threading.Thread):
     def run(self):
         pubmedresults, termsfound = textmining.textming_Start(self.termList, self.searchDept, [])
         sessionobject = self.createSessionObject(pubmedresults, termsfound)
-
-
         visualiseGraph.createNewGraph(sessionobject)
-<<<<<<< HEAD
-
-
-        databaseconnectie.databasevullen(sessionobject)
-        lijstid = [1,2,3,4]
-       # databaseconnectie.sessiesophalen(lijstid)
-
-=======
-        #Sophie, hier kan je de database aanroepen
-        databaseconnectie.databasevullen(sessionobject)
+        try:
+            databaseconnectie.databasevullen(sessionobject)
+        except mysql.connector.errors.IntegrityError:
+            #Still seems to work just fine
+            pass
         databaseconnectie.sessiesophalen()
->>>>>>> databaseconnectieV1.5
-        #mail.Mail(self.email, self.sessionName)
-        print()
+        mail.Mail(self.email, self.sessionName)
 
 
 

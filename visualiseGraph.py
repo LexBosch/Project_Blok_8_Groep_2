@@ -19,7 +19,7 @@ def get_Sessions():
         lijst_met_sessies.append(
             {
                 "sessionName": string,
-                "sesId":resultaatsessieID[sessienummer]
+                "sesId":resultaatsessietitel[sessienummer]
             }
         )
 
