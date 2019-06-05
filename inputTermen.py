@@ -25,6 +25,7 @@ class pubMedThread(threading.Thread):
         visualiseGraph.createNewGraph(sessionobject)
         #Sophie, hier kan je de database aanroepen
         databaseconnectie.databasevullen(sessionobject)
+        databaseconnectie.sessiesophalen()
         #mail.Mail(self.email, self.sessionName)
         print()
 
